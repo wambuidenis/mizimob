@@ -502,3 +502,18 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .social a:hover {
   color: #000;
 }
+
+
+#logo{
+  height: 70px;
+}
+.item{
+  border-radius:10px;
+}
+
+#nav_bar_bg{
+  height:800px;
+  color : red;
+  display:block;
+  /*background-attachment : fixed;*/
+}

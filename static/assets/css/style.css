@@ -9,7 +9,7 @@
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Inconsolata", monosapce;
+  font-family: "Yeseva One", monosapce;
   color: #0d1e2d;
 }
 
@@ -22,7 +22,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: "Raleway", sans-serif;
+  font-family: "Yeseva One", sans-serif;
 }
 
 .section {
@@ -501,4 +501,18 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 .social a:hover {
   color: #000;
+}
+
+#logo{
+  height: 70px;
+}
+.item{
+  border-radius:10px;
+}
+
+#nav_bar_bg{
+  height:800px;
+  color : red;
+  display:block;
+  /*background-attachment : fixed;*/
 }

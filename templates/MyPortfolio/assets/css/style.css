@@ -514,5 +514,5 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   height:800px;
   color : red;
   display:block;
-
+  /*background-attachment : fixed;*/
 }
