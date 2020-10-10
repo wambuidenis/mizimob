@@ -1,0 +1,1 @@
+from mizimob import app
