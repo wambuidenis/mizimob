@@ -5,15 +5,11 @@ from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
-from decouple import config
 import os
-
-
 
 db_pass = os.getenv('DBPASS')
 
 app = Flask(__name__)
-
 
 app.config["SECRET_KEY"] = 'ae98b899c219ea14930e01ecaafd451090f4276f6e3c20481d92d240acb35d47'
 # basedir  = os.path.abspath(os.path.dirname(__file__))
@@ -45,8 +41,6 @@ app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_PORT"] = 587
 
 mail = Mail()
-
-
 
 #  import routes
 from mizimob.routes import main
