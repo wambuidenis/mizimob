@@ -25,9 +25,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   font-family: "Raleway", sans-serif;
 }
 
-.section {
-  padding: 7rem 0;
-}
 
 .filters a {
   color: #000;
@@ -516,4 +513,9 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   color : red;
   display:block;
   /*background-attachment : fixed;*/
+}
+
+.product{
+  height:400px;
+  display:block;
 }

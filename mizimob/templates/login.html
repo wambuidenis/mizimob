@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Mizimob - we dont stop</title>
+  <title>Mizimob</title>
   <meta content="" name="descriptison">
   <meta content="" name="keywords">
 
@@ -34,47 +34,55 @@
 <body>
 
 <!--The video player BG start-->
-<div id="nav_bar_bg">
+<div id="">
     <!-- ======= Navbar ======= -->
   <nav class="navbar navbar-light custom-navbar">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
-          <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" class="mt-4" height="70" ®alt="Mizimob">
+      <a class="navbar-brand" href="{{ url_for('home') }}">
+          <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" height="70" ®alt="Mizimob">
       </a>
-
-{#      <!-- <a href="#" class="burger" data-toggle="collapse" data-target="#main-navbar">#}
-{#        <span></span>#}
-{#      </a> -->#}
-
-        <a href="#" class="cart" id="cart" data-target="#main-navbar">
-            <img src="{{ url_for('static',filename='shopping.png') }}" alt="Cart" height="40">
-        </a>
-
     </div>
   </nav>
 
 
 </div>
-{#start main#}
-{% block content %}
-{% endblock content %}
 
-{#end main#}
+<div class="main mb-5 mt-5">
+    <div class="container">
+            <form action="">
+                <h4>Login</h4>
+                <div class="col-lg-5">
+                    <hr>
+                </div>
+                <br>
+                <label for="email">Email</label><br>
+                <input type="text"  class ="form-control col-lg-4 rounded">
+                <br>
+                 <label for="email">Password</label><br>
+                <input type="password"  class ="form-control col-lg-4 rounded">
+                <br>
+                    <div class="mt-4 mb-5">
+                        <div class="btn btn-sm btn-primary col-lg-2 ml-2 col-sm-12">Login</div>
+                    </div>
+            </form>
+    </div>
+</div>
+
 <!--the head ...-->
-
+<br><br><br>
  <!-- ======= Footer ======= -->
-  <footer class="footer" role="contentinfo">
+  <footer class="footer mt-4" role="contentinfo">
     <div class="container">
       <div class="row">
         <div class="col-sm-6">
           <p class="mb-1">&copy; Copyright MiziMob 2020. All Rights Reserved</p>
         </div>
-        <div class="col-sm-6 social text-md-right">
-          <a href="#"><span class="icofont-twitter"></span></a>
-          <a href="#"><span class="icofont-facebook"></span></a>
-          <a href="#"><span class="icofont-dribbble"></span></a>
-          <a href="#"><span class="icofont-behance"></span></a>
-        </div>
+{#        <div class="col-sm-6 social text-md-right">#}
+{#          <a href="#"><span class="icofont-twitter"></span></a>#}
+{#          <a href="#"><span class="icofont-facebook"></span></a>#}
+{#          <a href="#"><span class="icofont-dribbble"></span></a>#}
+{#          <a href="#"><span class="icofont-behance"></span></a>#}
+{#        </div>#}
       </div>
     </div>
   </footer>
@@ -89,8 +97,6 @@
   <script src="{{ url_for('static',filename='assets/vendor/aos/aos.js') }}"></script>
   <script src="{{ url_for('static',filename='assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
   <script src="{{ url_for('static',filename='assets/vendor/owl.carousel/owl.carousel.min.js' )}}"></script>
-
-
   <!-- Template Main JS File -->
 <script src="{{ url_for('static',filename='assets/js/main.js' ) }}"></script>
 
