@@ -48,19 +48,21 @@ class Product(db.Model):
     price = db.Column(db.Integer,nullable=False,default=10)
     media = db.Column(db.Text,nullable=False, default="default.png")
     expires = db.Column(db.String(100),nullable=False)
+    active = db.Column(db.Integer,nullable=False, default=1)
 
-    def __init__(self,name,description,category,price,media,expires):
+    def __init__(self,name,description,category,price,media,expires,active):
         self.name = name
         self.description = description
         self.category = category
         self.price = price
         self.media = media
         self.expires = expires
+        self.active = active
 
 
 class CategorySChema(ma.Schema):
     class Meta:
-        fields = ("id","name","category","price","media","expires","date_added")
+        fields = ("id","name","category","price","media","expires","date_added","active")
 
 
 class Category(db.Model):
