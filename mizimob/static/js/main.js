@@ -68,4 +68,13 @@
     });
   });
 
+
+
+//  abit of styling
+//  $(".vid_bg").css("width","100vw");
+//  $(".vid_bg").css("heigth","100vh");
+//  $("body").css("overflow-x","hidden");
+//  $("#navbar").css("top","0px");
+//  $("#navbar").css("position","absolute");
+
 })(jQuery);

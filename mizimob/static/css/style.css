@@ -508,14 +508,23 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   border-radius:10px;
 }
 
-#nav_bar_bg{
-  height:800px;
-  color : red;
-  display:block;
-  /*background-attachment : fixed;*/
-}
 
 .product{
   height:400px;
   display:block;
 }
+
+body{
+  overflow-x: hidden;
+}
+.vid_bg{
+  width:100vw;
+  height:100vh;
+  overflow: hidden;
+}
+
+.vid_bg video{
+  min-height: 100%;
+  min-width:100%;
+}
+

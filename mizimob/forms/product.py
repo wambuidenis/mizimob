@@ -3,8 +3,9 @@ from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, InputRequired, ValidationError
-from mizimob.models.main import User,Product,Category
+from mizimob.models.models import User,Product,Category
 from flask import flash
+import email_validator
 
 
 class RegisterForm(FlaskForm):

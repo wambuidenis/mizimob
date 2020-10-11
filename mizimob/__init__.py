@@ -43,7 +43,7 @@ app.config["MAIL_PORT"] = 587
 mail = Mail()
 
 #  import routes
-from mizimob.routes import main
+from mizimob.routes import routes
 
 # import models
-from mizimob.models import main
+from mizimob.models import models

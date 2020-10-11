@@ -62,41 +62,45 @@
                 <h4>Login</h4>
                 <div class="col-lg-5">
                     <hr>
+
                 </div>
                 <br>
 
-                <div class="form-group">
+                <div class="form-group ">
                     {{ form.email.label(class='form-control-label')}}
                     {% if form.email.errors %}
-                    {{ form.email(class="form-control  form-control-smis-invalid")}}
+                    {{ form.email(class="form-control form-control-sm is-invalid col-lg-6 col-md-6 col-sm-12")}}
                     <div class="invalid-feedback">
                         {% for error in form.email.errors %}
                         <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                     {% else %}
-                    {{ form.email(class="form-control form-control-sm")}}
+                    {{ form.email(class="form-control form-control-sm col-lg-6 col-md-6 col-sm-12")}}
                     {% endif %}
                 </div>
 
-{#                <br>#}
-                 <<div class="form-group">
+                 <div class="form-group mt-2">
                     {{ form.password.label(class='form-control-label')}}
                     {% if form.password.errors %}
-                    {{ form.password(class="form-control  form-control-smis-invalid")}}
+                    {{ form.password(class="form-control  form-control-sm is-invalid col-lg-6 col-md-6 col-sm-12")}}
                     <div class="invalid-feedback">
                         {% for error in form.password.errors %}
                         <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                     {% else %}
-                    {{ form.password(class="form-control form-control-sm")}}
+                    {{ form.password(class="form-control form-control-sm col-lg-6 col-md-6 col-sm-12")}}
                     {% endif %}
                 </div>
-                <br>
-                    <div class="mt-4 mb-5">
-                         {{ form.submit(class="btn btn-sm btn-success btn-block mt-4")}}
+
+                    <div class="mt-5 mb-3">
+                         {{ form.submit(class="btn col-lg-3 col-md-6 col-sm-12 btn-sm btn-success btn-block mt-4")}}
                     </div>
+
+                    <span class="btn btn-sm btn-link">forgot password</span>
+
+
             </form>
     </div>
 </div>
