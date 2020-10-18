@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
 
     def __repr__(self):
-        return f"User (' {self.id} ',' {self.username} ', '{self.email}', '{self.image_file}' )"
+        return f"User (' {self.id}', '{self.email}', '{self.image_file}' )"
 
     def __init__(self, firstname, lastname, phone, email, password):
         self.firstname = firstname
@@ -31,6 +31,9 @@ class User(db.Model, UserMixin):
         self.phone = phone
         self.email = email
         self.password = password
+
+
+# here we are going to create a user for the
 
 
 class UserSchema(ma.Schema):
@@ -67,7 +70,7 @@ class CategorySChema(ma.Schema):
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255),nullable=False)
+    name = db.Column(db.String(255),nullable=False,unique=True)
 
     def __init__(self,name):
         self.name = name
@@ -76,4 +79,6 @@ class Category(db.Model):
 class CategorySchema(ma.Schema):
     class Meta:
         fields = ("id","name")
+
+
 

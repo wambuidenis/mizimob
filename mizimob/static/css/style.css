@@ -1,15 +1,6 @@
-/**
-* Template Name: MyPortfolio - v2.1.0
-* Template URL: https://bootstrapmade.com/myportfolio-bootstrap-portfolio-website-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
 
-/*--------------------------------------------------------------
-# General
---------------------------------------------------------------*/
 body {
-  font-family: "Inconsolata", monosapce;
+  font-family: "Inconsolata", monospace;
   color: #0d1e2d;
 }
 
@@ -22,7 +13,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: "Raleway", sans-serif;
+  font-family: "Inconsolata", monospace, sans-serif;
 }
 
 
@@ -528,3 +519,7 @@ body{
   min-width:100%;
 }
 
+
+*{
+  font-family: "Inconsolata";
+}

@@ -13,10 +13,8 @@
   <link href="{{ url_for('static',filename='assets/img/favicon.png') }}" rel="icon">
   <link href="{{ url_for('static',filename='assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-<!-- <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,
-600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet"> -->
-    <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Vendor CSS Files -->
   <link href="{{ url_for('static',filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -52,10 +50,10 @@
 <!--The video player BG start-->
 <div id="">
     <!-- ======= Navbar ======= -->
-  <nav class="navbar navbar-light custom-navbar" id="navbar">
+  <nav class="navbar navbar-light custom-navbar mb-5" id="navbar">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-          <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" class="mt-4" height="70" ®alt="Mizimob">
+          <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" class="mt-4" height="50px" ®alt="Mizimob">
       </a>
 
 
@@ -85,7 +83,7 @@
           <p class="mb-1">&copy; Copyright MiziMob 2020. All Rights Reserved</p>
 
             <br>
-            <a href="{{ url_for('admin_login') }}" class="btn btn-outline-dark btn-sm">Admin Login</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-dark btn-sm">Admin Login</a>
             <br><br>
         </div>
         <div class="col-sm-6 social text-md-right">
