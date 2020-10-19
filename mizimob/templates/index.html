@@ -39,7 +39,7 @@
                         <h3>{{ product["name"] }}</h3>
                         <span>{{ product["category"] }}</span>
                       </div>
-                      <img class="img-fluid" src="{{ url_for('static',filename=product["image"])}}">
+                      <img class="img-fluid" src="{{ url_for('static',filename='uploads/'+product["image"])}}">
                     </a>
                   </div>
               {% endfor %}

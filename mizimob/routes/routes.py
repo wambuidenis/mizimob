@@ -16,8 +16,9 @@ categories_schema = CategorySChema(many=True)
 product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
 
-image_schema= MediaSchema()
+image_schema = MediaSchema()
 images_schema = MediaSchema(many=True)
+
 
 @app.route('/')
 def home():
@@ -48,8 +49,9 @@ def home():
 def item(name):
     #  we are going  to get the name from the database
     # get images and file fron the database and sho them here
-    lookup = Product.query.filter_by(name = name).first()
+    lookup = Product.query.filter_by(name=name).first()
     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
+    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
 
     # media_data
     lookup_data = product_schema.dump(lookup)
@@ -58,8 +60,10 @@ def item(name):
     for media in media_data:
         images.append(media['file'])
     lookup_data["images"] = images
-
-    return render_template("work-single.html", product = lookup_data)
+    index = lookup_data["category"]
+    lookup_data["category"] = category_mapper[f"{index}"]
+    print(lookup_data)
+    return render_template("work-single.html", product=lookup_data)
 
 
 @app.route("/admin/login", methods=["POST", 'GET'])
@@ -87,15 +91,40 @@ def login():
 @app.route("/admin/product/all")
 @login_required
 def products_all():
+    # get products from the database
     products = Product.query.all()
-    print(products)
-    return render_template("manage_product.html")
+    product_dict = products_schema.dump(products)
+    # name
+    new_products = list()
+    category_mapper = {"1": "events", "2": "title", "3": "rental"}
+    for product in product_dict:
+        index = product["category"]
+        product["category"] = category_mapper[f"{index}"]
+        new_products.append(product)
+        try:
+            lookup = Media.query.filter_by(product_id=product["id"]).first()
+            image = image_schema.dump(lookup)
+            file = image_schema.dump(lookup)["file"]
+            product["image"] = file
+        except KeyError:
+            file = "default.jpg"
+            product["image"] = file
+
+    return render_template("manage_product.html",  products=new_products)
 
 
-@app.route("/admin/product/edit/<int:id>")
+@app.route("/test")
 @login_required
-def edit_project():
-    pass
+def test():
+    return render_template("withmenu.html")
+
+
+@app.route("/admin/product/edit/<string:name>")
+@login_required
+def edit_project(name):
+    lookup = Product.query.filter_by(name=name).first()
+    form = ProductForm()
+    return render_template("edit.html",product=lookup,form=form)
 
 
 @app.route("/admin/category/add", methods=["POST"])

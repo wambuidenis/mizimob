@@ -4,5 +4,45 @@
 <div class="container">
     <div id="holder">
     </div>
+
+            <section class="section site-portfolio">
+              <div class="container">
+                <div class="row mb-5 align-items-center">
+                  <div class="col-md-12 col-lg-6 mb-4 mb-lg-0"  data-aos="fade-up">
+                    <h4 class="mt-2">Our Services</h4>
+                  </div>
+                  <div class="col-md-12 col-lg-6 text-left text-lg-right" data-aos="fade-up" data-aos-delay="100">
+                  <!--NAVIGATION-->
+                  <div id="filters" class="filters">
+                      <a href="#" data-filter="*" class="active">All</a>
+                      <a href="#" data-filter=".events">Events</a>
+                      <a href="#" data-filter=".travel">Travel</a>
+                      <a href="#" data-filter=".rental">Rentals</a>
+                  </div>
+                  <!--END NAVIGATION-->
+                  </div>
+
+                </div>
+
+                <div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
+                    <!--item start-->
+
+
+             {% for product in products %}
+                  <div class="item {{ product["category"] }} col-sm-6 col-md-4 col-lg-4 mb-4">
+                    <a href="{{ url_for('edit_project',name=product["name"]) }}" class="item-wrap fancybox">
+                      <div class="work-info">
+                        <h3>{{ product["name"] }}</h3>
+                        <span>{{ product["category"] }}</span>
+                      </div>
+                      <img class="img-fluid" src="{{ url_for('static',filename='uploads/'+product["image"])}}">
+                    </a>
+                  </div>
+              {% endfor %}
+
+                </div>
+              </div>
+            </section><!-- End  Works Section -->
+      </div><!--
 </div>
 {% endblock content %}

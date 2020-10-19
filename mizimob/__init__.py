@@ -15,7 +15,7 @@ app.config["SECRET_KEY"] = 'ae98b899c219ea14930e01ecaafd451090f4276f6e3c20481d92
 # basedir  = os.path.abspath(os.path.dirname(__file__))
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+mysqlconnector://root:@localhost:3306/mizimob"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# app.config["FILE_UPLOAD_DIR"] = "/uploads"
+# app.config["FILE_UPLOAD_DIR"] = "/upload"
 
 try:
     db = SQLAlchemy(app)
