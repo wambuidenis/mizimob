@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from mizimob import db,ma, login_manager
+from mizimob import db, ma, login_manager
 from datetime import datetime
 
 
@@ -16,8 +16,8 @@ def load_user(user_id):
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(100), unique=True, nullable=False)
-    lastname = db.Column(db.String(100),unique=True, nullable=False)
-    phone = db.Column(db.String(100),unique=True)
+    lastname = db.Column(db.String(100), unique=True, nullable=False)
+    phone = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(48), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
@@ -38,47 +38,57 @@ class User(db.Model, UserMixin):
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ("id","firstname","lastname","phone","email","password")
+        fields = ("id", "firstname", "lastname", "phone", "email", "password")
 
 
 # creating a company class
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255),unique=True, nullable=False)
+    name = db.Column(db.String(255), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=False)
     date_added = db.Column(db.DateTime(), default=datetime.now)
-    category = db.Column(db.ForeignKey('category.id'),nullable=False)
-    price = db.Column(db.Integer,nullable=False,default=10)
-    media = db.Column(db.Text,nullable=False, default="default.png")
-    expires = db.Column(db.String(100),nullable=False)
-    active = db.Column(db.Integer,nullable=False, default=1)
+    category = db.Column(db.ForeignKey('category.id'), nullable=False)
+    price = db.Column(db.Integer, nullable=False, default=10)
+    expires = db.Column(db.String(100), nullable=False)
+    active = db.Column(db.Integer, nullable=False, default=1)
 
-    def __init__(self,name,description,category,price,media,expires,active):
+    def __init__(self, name, description, category, price, expires, active):
         self.name = name
         self.description = description
         self.category = category
         self.price = price
-        self.media = media
         self.expires = expires
         self.active = active
 
 
-class CategorySChema(ma.Schema):
+class ProductSchema(ma.Schema):
     class Meta:
-        fields = ("id","name","category","price","media","expires","date_added","active")
+        fields = ("id", "name", "category", "price", "media", "expires", "date_added", "active")
+
+
+class Media(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.ForeignKey("product.id"), nullable=False)
+    file = db.Column(db.String(250), nullable=False)
+
+    def __init__(self,product_id,file):
+        self.product_id = product_id
+        self.file = file
+
+
+class MediaSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "product_id", "file")
 
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255),nullable=False,unique=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
 
-    def __init__(self,name):
+    def __init__(self, name):
         self.name = name
 
 
-class CategorySchema(ma.Schema):
+class CategorySChema(ma.Schema):
     class Meta:
-        fields = ("id","name")
-
-
-
+        fields = ("id", "name")

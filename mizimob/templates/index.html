@@ -5,6 +5,9 @@
     <!-- ======= SHOP SECTION ======= -->
     <section class="section site-portfolio">
           <div id="main">
+
+
+{#            adding item to the DOM#}
             <!-- ======= SHOP SECTION ======= -->
             <section class="section site-portfolio">
               <div class="container">
@@ -16,7 +19,7 @@
                   <!--NAVIGATION-->
                   <div id="filters" class="filters">
                       <a href="#" data-filter="*" class="active">All</a>
-                      <a href="#" data-filter=".events">events</a>
+                      <a href="#" data-filter=".events">Events</a>
                       <a href="#" data-filter=".travel">Travel</a>
                       <a href="#" data-filter=".rental">Rentals</a>
                   </div>
@@ -27,79 +30,19 @@
 
                 <div id="portfolio-grid" class="row no-gutter" data-aos="fade-up" data-aos-delay="200">
                     <!--item start-->
-                  <div class="item events col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item')}}" class="item-wrap fancybox">
+
+
+             {% for product in products %}
+                  <div class="item {{ product["category"] }} col-sm-6 col-md-4 col-lg-4 mb-4">
+                    <a href="{{ url_for('item',name=product["name"]) }}" class="item-wrap fancybox">
                       <div class="work-info">
-                        <h3>Boxed Water</h3>
-                        <span>Events</span>
+                        <h3>{{ product["name"] }}</h3>
+                        <span>{{ product["category"] }}</span>
                       </div>
-                      <img class="img-fluid" src="{{ url_for('static',filename='assets/img/img_1.jpg')}}">
+                      <img class="img-fluid" src="{{ url_for('static',filename=product["image"])}}">
                     </a>
                   </div>
-                <!--item end-->
-
-
-                    <div class="item travel col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item') }}" class="item-wrap fancybox">
-                      <div class="work-info">
-                        <h3>Cocooil</h3>
-                        <span>Travel</span>
-                      </div>
-                      <img class="img-fluid" src="{{ url_for('static',filename='assets/img/img_3.jpg') }}">
-                    </a>
-                  </div>
-
-                  <div class="item events col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item') }}" class="item-wrap fancybox">
-                      <div class="work-info">
-                        <h3>Build Indoo</h3>
-                        <span>rentals</span>
-                      </div>
-                      <img class="img-fluid" src="{{ url_for('static',filename='assets/img/img_2.jpg') }}">
-                    </a>
-                  </div>
-
-
-
-                    <div class="item rental col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item') }}" class="item-wrap fancybox">
-                      <div class="work-info">
-                        <h3>Cocooil</h3>
-                        <span>Rental</span>
-                      </div>
-                      <img class="img-fluid" src="{{ url_for('static',filename='assets/img/img_3.jpg') }}">
-                    </a>
-                  </div>
-
-                  <div class="item travel col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item')}}" class="item-wrap fancybox">
-                      <div class="work-info">
-                        <h3>Nike Shoe</h3>
-                        <span>Travel</span>
-                      </div>
-                      <img class="img-fluid" src="{{ url_for('static', filename='assets/img/img_4.jpg') }}">
-                    </a>
-                  </div>
-
-                  <div class="item rentals col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item')}}" class="item-wrap fancybox">
-                      <div class="work-info">
-                        <h3>Kitchen Sink</h3>
-                        <span>Rentals</span>
-                      </div>
-                      <img class="img-fluid" src="{{ url_for('static', filename='assets/img/img_5.jpg') }}">
-                    </a>
-                  </div>
-
-                  <div class="item rentals col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item')}}" class="item-wrap ">
-                      <div class="work-info">
-                        <h3>Amazon</h3>
-                        <span>Rentals</span>
-                      </div>
-                      <img class="img-fluid" src="{{  url_for('static',filename='assets/img/img_6.jpg') }}">
-                    </a>
-                  </div>
+              {% endfor %}
 
                 </div>
               </div>
