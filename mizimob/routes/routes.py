@@ -145,7 +145,7 @@ def seeder():
     db.session.add(category)
 
     # user seed
-    user = User("Denis", "Kiruku", "254719573310", "denniskiruku@gmail.com", bcrypt.generate_password_hash("1234"))
+    user = User("Denis", "Kiruku", "254719573310", "admin@gmail.com", bcrypt.generate_password_hash("1234"))
     db.session.add(user)
     try:
         #  category
