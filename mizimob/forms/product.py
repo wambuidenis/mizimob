@@ -94,3 +94,8 @@ class OrderForm(FlaskForm):
     when = StringField("When", validators=[DataRequired()])
     where = StringField("Where", validators=[DataRequired()])
     submit = SubmitField("Make The Request")
+
+
+class PhoneEmail(FlaskForm):
+    email_phone = StringField("Email/Phone", validators=[DataRequired(), Email()])
+    submit = SubmitField("Get Orders")

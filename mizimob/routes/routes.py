@@ -1,12 +1,12 @@
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, current_user, login_required
+from flask_sqlalchemy import sqlalchemy
+
 from mizimob import app, bcrypt, db
-from mizimob.forms.product import LoginForm, ProductForm, CategoryForm
+from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema)
-from flask_sqlalchemy import sqlalchemy
-import secrets, os
-from PIL import Image
+from mizimob.others.utils import  validate_email
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -56,7 +56,6 @@ def item(name):
     lookup = Product.query.filter_by(name=name).first()
     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
     category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
-
     # media_data
     lookup_data = product_schema.dump(lookup)
     media_data = images_schema.dump(media_lookup)
@@ -117,10 +116,8 @@ def login():
     # login = LoginForm()
     if current_user.is_authenticated:
         return redirect(url_for("products_all"))
-
     # loading the form
     login = LoginForm()
-
     # checking the form data status
     if login.validate_on_submit():
         print("form_data", login.email.data, login.password.data)
@@ -179,19 +176,22 @@ def add_category():
     return render_template()
 
 
-@app.route('/cart')
+@app.route('/cart',methods=['POST',"GET"])
 def cart():
-    return render_template("cart.html")
-
-
-@app.route('/cart/<string:phone_email>')
-def user_cart(phone_email):
-    return render_template("cart.html")
-
-
-def cart():
-    return render_template("cart.html")
-
+    form_ = PhoneEmail()
+    if request.method == "POST":
+        if form_.validate_on_submit():
+            phone_email = form_.email_phone.data
+            # get data from the database
+            lookup_data = Order.query.filter_by(email=phone_email).all() if validate_email(phone_email) else \
+                Order.query.filter_by(phone=phone_email ).all()
+        else:
+            flash("Please make Sure Form Data is Valid.")
+    else:
+        form_ = PhoneEmail()
+        return render_template("cart.html",form = form_)
+    #  orders=lookup_data
+    return render_template("cart.html", form=form_)
 
 
 @app.route("/db/seed", methods=["POST"])

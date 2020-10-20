@@ -114,3 +114,6 @@ class Order(db.Model):
 class OrderSchema(ma.Schema):
     class Meta:
         fields = ("id", "product_id", "location", "email", "phone", "count", "date_added")
+
+
+

@@ -14,10 +14,8 @@
   <link href="{{ url_for('static',filename='assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
-<!-- <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,
-600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet"> -->
-{#<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">#}
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+
   <!-- Vendor CSS Files -->
   <link href="{{ url_for('static',filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static',filename='assets/vendor/icofont/icofont.min.css') }}" rel="stylesheet">
@@ -65,7 +63,7 @@
                     <hr>
                 </div>
                 <br>
-                <div class="form-group ">
+                div class="form-group ">
                     {{ form.email.label(class='form-control-label')}}
                     {% if form.email.errors %}
                     {{ form.email(class="form-control form-control-sm is-invalid col-lg-6 col-md-6 col-sm-12")}}
@@ -77,7 +75,7 @@
                     {% else %}
                     {{ form.email(class="form-control form-control-sm col-lg-6 col-md-6 col-sm-12")}}
                     {% endif %}
-                </div>
+                </div><
 
                  <div class="form-group mt-2">
                     {{ form.password.label(class='form-control-label')}}

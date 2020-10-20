@@ -1,16 +1,14 @@
 {% extends 'product_layout.html' %}
 {% block content %}
-     <main id="main">
+ <main id="main">
     <section class="section">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-6" data-aos="fade-up">
             <h5>{{ product['name'] }}</h5>
-{#            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam necessitatibus incidunt ut officiis explicabo inventore.</p>#}
           </div>
         </div>
       </div>
-
       <div class="site-section pt-0">
         <div class="container">
           <div class="row align-items-stretch">
@@ -22,20 +20,11 @@
               <div class="sticky-content">
                 <h3 class="h3 mt-5">{{ product["name"] }}</h3>
                 <p class="mb-4"><span class="text-muted">{{ product['category'] }}</span></p>
-
                 <div class="mb-5">
                   <p>
                       {{ product['description'] }}
                   </p>
                 </div>
-
-    {#                <h4 class="h5 mb-3">More Info</h4>#}
-    {#                <ul class="list-unstyled list-line mb-5">#}
-    {#                  <li>2 Night Out </li>#}
-    {#                  <li>Photoshoots</li>#}
-    {#                  <li>Other Items</li>#}
-    {#                </ul>#}
-    {#                <p>#}
                     <a href="{{ url_for('more_info',name=product['name']) }}" class="btn btn-outline-primary btn-sm
                     col-lg-9
                     col-md-8
@@ -47,7 +36,8 @@
             </div>
           </div>
         </div>
+      </div>
     </section>
-
-  </main><!-- End #main -->
+  </main>
+<!-- End #main -->
 {% endblock content %}
