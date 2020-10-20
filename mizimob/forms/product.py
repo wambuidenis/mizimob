@@ -1,12 +1,11 @@
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
-from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, RadioField, SelectField, \
-    MultipleFileField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, InputRequired, ValidationError
-from mizimob.models.models import User, Product, Category
 from flask import flash
-import email_validator
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, RadioField, SelectField, \
+    MultipleFileField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+
+from mizimob.models.models import User, Product, Category
 
 
 class RegisterForm(FlaskForm):
@@ -19,12 +18,14 @@ class RegisterForm(FlaskForm):
     submit = SubmitField("Register")
 
     # validation  for checking if the username
+    @staticmethod
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError("Username Already Taken. Please Choose Another One")
 
     # validation from checking the email
+    @staticmethod
     def validate_email(self, email):
         email = User.query.filter_by(email=email.data).first()
         if email:
@@ -43,6 +44,7 @@ class ResetRequest(FlaskForm):
     submit = SubmitField("Request Email Reset")
 
     # validate password
+    @staticmethod
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is None:
@@ -67,7 +69,8 @@ class ProductForm(FlaskForm):
     submit = SubmitField("Save The product")
 
     # validate password
-    def validate_product(self, title):
+    @staticmethod
+    def validate_product(title):
         product = Product.query.filter_by(name=title.data).first()
         if product is not None:
             flash("Product With that name Exists. Please Use another name", "warning")
@@ -77,8 +80,17 @@ class CategoryForm(FlaskForm):
     name = StringField("name", validators=[DataRequired()])
     submit = SubmitField("Save Category")
 
+    @staticmethod
     def validate_category(self, name):
         category = Category.query.filter_by(name=name.data).first()
 
         if category is not None:
             flash("Category Name Already Exists.", "warning")
+
+
+class OrderForm(FlaskForm):
+    phone = StringField("Phone Number", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    when = StringField("When", validators=[DataRequired()])
+    where = StringField("Where", validators=[DataRequired()])
+    submit = SubmitField("Make The Request")

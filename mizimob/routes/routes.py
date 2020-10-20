@@ -2,7 +2,8 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, current_user, logout_user, login_required
 from mizimob import app, bcrypt, db
 from mizimob.forms.product import LoginForm, ProductForm, CategoryForm
-from mizimob.models.models import User, Category, CategorySChema, UserSchema, Product, Media, MediaSchema, ProductSchema
+from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
+                                   ProductSchema, Order, OrderSchema)
 from flask_sqlalchemy import sqlalchemy
 import secrets, os
 from PIL import Image
@@ -10,14 +11,17 @@ from PIL import Image
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
-category_schema = CategorySChema()
-categories_schema = CategorySChema(many=True)
+category_schema = CategorySchema()
+categories_schema = CategorySchema(many=True)
 
 product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
 
 image_schema = MediaSchema()
 images_schema = MediaSchema(many=True)
+
+order_schema = OrderSchema()
+orders_schema = OrderSchema(many=True)
 
 
 @app.route('/')
@@ -66,6 +70,48 @@ def item(name):
     return render_template("work-single.html", product=lookup_data)
 
 
+@app.route("/product/<string:name>/request", methods=['POST', "GET"])
+def more_info(name):
+    #  we are going  to get the name from the database
+    # get images and file fron the database and sho them here
+    lookup = Product.query.filter_by(name=name).first()
+    media_lookup = Media.query.filter_by(product_id=lookup.id).all()
+    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
+
+    # media_data
+    lookup_data = product_schema.dump(lookup)
+    media_data = images_schema.dump(media_lookup)
+    images = list()
+    for media in media_data:
+        images.append(media['file'])
+    lookup_data["images"] = images
+    index = lookup_data["category"]
+    lookup_data["category"] = category_mapper[f"{index}"]
+    print(lookup_data)
+    return render_template("request_item.html", product=lookup_data)
+
+
+@app.route("/product/<string:name>/Book", methods=['POST', "GET"])
+def make_booking(name):
+    #  we are going  to get the name from the database
+    # get images and file fron the database and sho them here
+    lookup = Product.query.filter_by(name=name).first()
+    media_lookup = Media.query.filter_by(product_id=lookup.id).all()
+    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
+
+    # media_data
+    lookup_data = product_schema.dump(lookup)
+    media_data = images_schema.dump(media_lookup)
+    images = list()
+    for media in media_data:
+        images.append(media['file'])
+    lookup_data["images"] = images
+    index = lookup_data["category"]
+    lookup_data["category"] = category_mapper[f"{index}"]
+    print(lookup_data)
+    return render_template("finalize_request.html", product=lookup_data)
+
+
 @app.route("/admin/login", methods=["POST", 'GET'])
 def login():
     # login = LoginForm()
@@ -110,7 +156,7 @@ def products_all():
             file = "default.jpg"
             product["image"] = file
 
-    return render_template("manage_product.html",  products=new_products)
+    return render_template("manage_product.html", products=new_products)
 
 
 @app.route("/test")
@@ -124,7 +170,7 @@ def test():
 def edit_project(name):
     lookup = Product.query.filter_by(name=name).first()
     form = ProductForm()
-    return render_template("edit.html",product=lookup,form=form)
+    return render_template("edit.html", product=lookup, form=form)
 
 
 @app.route("/admin/category/add", methods=["POST"])
@@ -136,6 +182,16 @@ def add_category():
 @app.route('/cart')
 def cart():
     return render_template("cart.html")
+
+
+@app.route('/cart/<string:phone_email>')
+def user_cart(phone_email):
+    return render_template("cart.html")
+
+
+def cart():
+    return render_template("cart.html")
+
 
 
 @app.route("/db/seed", methods=["POST"])
@@ -196,22 +252,5 @@ def add():
             flash("Error with the form", "warning")
     else:
         return render_template("add.html", form=form)
-
     return render_template("add.html", form=form)
 
-
-@app.route("/admin/product/events", methods=['POST', "GET"])
-def events():
-    return render_template("events.html")
-
-
-@app.route("/admin/product/travel", methods=["POST", "GET"])
-def travel():
-    return render_template("travel.html")
-
-
-@app.route("/admin/rentals/rentals", methods=["POST", "GET"])
-def rentals():
-    return render_template("rentals.html")
-
-    pass

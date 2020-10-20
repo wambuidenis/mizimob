@@ -36,7 +36,12 @@
     {#                  <li>Other Items</li>#}
     {#                </ul>#}
     {#                <p>#}
-                    <button class="btn btn-outline-primary btn-sm col-lg-9 col-md-8 ">Enquire more details</button>
+                    <a href="{{ url_for('more_info',name=product['name']) }}" class="btn btn-outline-primary btn-sm
+                    col-lg-9
+                    col-md-8
+">Enquire
+                        more
+                        details</a>
                 </p>
               </div>
             </div>
