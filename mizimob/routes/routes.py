@@ -221,7 +221,7 @@ def seeder():
 def add():
     form = ProductForm()
     # category_mapper = {"Event": "1", "Title": "2", "Rental": "3"}
-    if request.method == "POST" and form.validate_on_submit():
+    if request.method == "POST":
         # title = form.title.data
         # category = int(category_mapper[form.category.data])
         # price = form.price.data
