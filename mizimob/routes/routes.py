@@ -7,6 +7,7 @@ from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEm
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema)
 from mizimob.others.utils import  validate_email
+import os
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -201,7 +202,7 @@ def seeder():
     db.session.add(category)
 
     # user seed
-    user = User("Denis", "Kiruku", "254719573310", "admin@gmail.com", bcrypt.generate_password_hash("1234"))
+    user = User("Admin", "Mode", "254719573310", "admin@gmail.com", bcrypt.generate_password_hash("1234"))
     db.session.add(user)
     try:
         #  category
@@ -229,18 +230,20 @@ def add():
             expires = form.expires.data
             active = True if form.active.data == "Active" else False
             # data
-            #  add to the db
+            # add to the db
             lookup = Product(title, description, category, price, expires, active)
             db.session.add(lookup)
             db.session.commit()
-            #
-            # # product schema data
+
+            # product schema data
             data = product_schema.dump(lookup)
             files = form.media.data
             filenames = []
             for file in files:
                 filenames.append(file.filename)
-                file.save(file.filename)
+                path = os.path.join(os.getcwd(),"mizimob","static","uploads",file.filename)
+                file.save(path)
+
                 # added the database
                 lookup = Media(data['id'], file.filename)
                 db.session.add(lookup)
