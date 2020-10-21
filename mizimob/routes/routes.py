@@ -254,7 +254,7 @@ def add():
         else:
             form.validate()
             flash("Error with the form", "warning")
-    else:
-        return render_template("add.html", form=form)
+    # else:
+    #     return render_template("add.html", form=form)
     return render_template("add.html", form=form)
 
