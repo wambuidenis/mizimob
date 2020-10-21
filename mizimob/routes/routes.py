@@ -220,35 +220,35 @@ def seeder():
 @app.route("/admin/product/add", methods=['POST', "GET"])
 def add():
     form = ProductForm()
-    # category_mapper = {"Event": "1", "Title": "2", "Rental": "3"}
+    category_mapper = {"Event": "1", "Title": "2", "Rental": "3"}
     if request.method == "POST":
-        print(form.validate_on_submit())
-        # title = form.title.data
-        # category = int(category_mapper[form.category.data])
-        # price = form.price.data
-        # description = form.description.data
-        # expires = form.expires.data
-        # print(">>>>",title,price,description,expires)
-    #     # active = True if form.active.data == "Active" else False
-    #     # data
-    #     # add to the db
-    #     lookup = Product(title, description, "Title", price, expires, True)
-    #     db.session.add(lookup)
-    #     db.session.commit()
-    #
-    #     # product schema data
-    #     data = product_schema.dump(lookup)
-    #     files = form.media.data
-    #     filenames = []
-    #     for file in files:
-    #         filenames.append(file.filename)
-    #         path = os.path.join(os.getcwd(),"mizimob","static","uploads",file.filename)
-    #         file.save(path)
-    #
-    #         # added the database
-    #         lookup = Media(data['id'], file.filename)
-    #         db.session.add(lookup)
-    #         db.session.commit()
+        if form.validate_on_submit():
+            title = form.title.data
+            category = int(category_mapper[form.category.data])
+            price = form.price.data
+            description = form.description.data
+            expires = form.expires.data
+            print(">>>>",title,price,description,expires)
+            # active = True if form.active.data == "Active" else False
+            # data
+            # add to the db
+            lookup = Product(title, description, "Title", price, expires, True)
+            db.session.add(lookup)
+            db.session.commit()
+
+            # product schema data
+            data = product_schema.dump(lookup)
+            files = form.media.data
+            filenames = []
+            for file in files:
+                filenames.append(file.filename)
+                path = os.path.join(os.getcwd(),"mizimob","static","uploads",file.filename)
+                file.save(path)
+
+                # added the database
+                lookup = Media(data['id'], file.filename)
+                db.session.add(lookup)
+                db.session.commit()
 
         flash("form data submitted is valid", "success")
     else:
