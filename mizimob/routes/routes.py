@@ -229,10 +229,10 @@ def add():
             description = form.description.data
             expires = form.expires.data
             print(">>>>",title,price,description,expires)
-            # active = True if form.active.data == "Active" else False
+            active = True if form.active.data == "Active" else False
             # data
             # add to the db
-            lookup = Product(title, description, "Title", price, expires, True)
+            lookup = Product(title, description, category, price, expires, active)
             db.session.add(lookup)
             db.session.commit()
 
