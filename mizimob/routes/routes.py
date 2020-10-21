@@ -220,7 +220,7 @@ def seeder():
 @app.route("/admin/product/add", methods=['POST', "GET"])
 def add():
     form = ProductForm()
-    category_mapper = {"Event": 1, "Title": 2, "Rental": 3}
+    # category_mapper = {"Event": 1, "Title": 2, "Rental": 3}
     if request.method == "POST":
         # if form.validate_on_submit():
         #     title = form.title.data
@@ -250,10 +250,9 @@ def add():
         #         db.session.add(lookup)
         #         db.session.commit()
 
-            flash("form data submitted is valid", "success")
-        else:
-            form.validate()
-            flash("Error with the form", "warning")
+        flash("form data submitted is valid", "success")
+    else:
+        flash("Error with the form", "warning")
     # else:
     #     return render_template("add.html", form=form)
     return render_template("add.html", form=form)
