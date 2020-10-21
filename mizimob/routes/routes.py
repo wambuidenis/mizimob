@@ -220,7 +220,7 @@ def seeder():
 @app.route("/admin/product/add", methods=['POST', "GET"])
 def add():
     form = ProductForm()
-    # category_mapper = {"Event": 1, "Title": 2, "Rental": 3}
+    category_mapper = {"Event": 1, "Title": 2, "Rental": 3}
     if request.method == "POST":
         # if form.validate_on_submit():
         #     title = form.title.data
