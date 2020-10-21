@@ -228,6 +228,7 @@ def add():
             price = form.price.data
             description = form.description.data
             expires = form.expires.data
+            print(">>>>",title,category,price,description,expires)
             active = True if form.active.data == "Active" else False
             # data
             # add to the db
