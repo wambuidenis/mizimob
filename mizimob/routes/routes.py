@@ -224,15 +224,15 @@ def add():
     if request.method == "POST":
         if form.validate_on_submit():
             title = form.title.data
-            category = category_mapper[form.category.data]
+            # category = category_mapper[form.category.data]
             price = form.price.data
             description = form.description.data
             expires = form.expires.data
-            print(">>>>",title,category,price,description,expires)
+            # print(">>>>",title,category,price,description,expires)
             active = True if form.active.data == "Active" else False
             # data
             # add to the db
-            lookup = Product(title, description, category, price, expires, active)
+            lookup = Product(title, description, "Title", price, expires, active)
             db.session.add(lookup)
             db.session.commit()
 
