@@ -115,6 +115,7 @@
     let navbar = $("#navbar");
     let overlay = $(".overlay")
     let textContainer = $(".text-container");
+    let vid = $("#bg_vid");
 
 
     bg.css("width","100vw")
@@ -124,7 +125,7 @@
     navbar.css("position","absolute");
 
     overlay.css("width","100vw")
-    overlay.css("height","100vh");
+    overlay.css("height","112vh");
     overlay.css("background","rgba(240,240,240,0.9)");
     overlay.css("position","absolute");
     overlay.css("top","0px");
@@ -133,9 +134,9 @@
     textContainer.css("position","absolute");
     textContainer.css("left","50%");
     textContainer.css("top","50%");
-    textContainer.css("transform","translate(-50%,-50%)")
-    {#$("#bg_vid").css("width","100vw")#}
-    $("#bg_vid").css("height","100vh")
+    textContainer.css("transform","translate(-50%,-50%)");
+    vid.css("width","100vw")
+    {#$("#bg_vid").css("height","100vh")#}
   },100)
 
      setTimeout(()=>{
