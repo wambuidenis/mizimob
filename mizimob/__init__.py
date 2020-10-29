@@ -6,11 +6,12 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
-# db_pass = os.getenv('DBPASS')
-# # db_user = os.getenv('DBUSER')
-
-db_user = "site"
+db_pass = os.getenv('DBPASS')
+db_user = os.getenv('DBUSER')
+print(db_pass,db_user)
 
 app = Flask(__name__)
 
