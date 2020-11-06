@@ -6,7 +6,7 @@ from mizimob import app, bcrypt, db
 from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail,OrderForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema)
-from mizimob.others.utils import  validate_email
+from mizimob.others.utils import  validate_email,validate_phone,send_email
 import os
 
 user_schema = UserSchema()

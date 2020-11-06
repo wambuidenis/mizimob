@@ -100,18 +100,20 @@ class Order(db.Model):
     location = db.Column(db.Text, nullable=False)
     email = db.Column(db.String(255), nullable=True)
     phone = db.Column(db.String(255), nullable=True)
+    when = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, product_id, location, email, phone):
+    def __init__(self, product_id, location,when, email, phone):
         self.product_id = product_id
         self.location = location
+        self.when = when
         self.email = email
         self.phone = phone
 
 
 class OrderSchema(ma.Schema):
     class Meta:
-        fields = ("id", "product_id", "location", "email", "phone", "count", "date_added")
+        fields = ("id", "product_id", "location","when", "email", "phone", "date_added")
 
 
 

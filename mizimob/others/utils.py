@@ -10,7 +10,7 @@ def validate_email(email):
     return re.match(regex, email)
 
 
-def verify_phone(number):
+def validate_phone(number):
     regex = re.compile(r'^[+]*[(]?[0-9]{1,4}[)]?[-\s\./0-9]*$', re.IGNORECASE)
     final = re.match(regex, number)
     return final
