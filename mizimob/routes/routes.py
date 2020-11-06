@@ -99,7 +99,7 @@ def more_info(name):
             when = form.when.data
         #     here we are going to send an email and also make a db entry
             try :
-                order = Order(lookup.id,where,email,phone)
+                order = Order(lookup.id,where,when,email,phone)
                 db.session.add(order)
                 db.session.commit()
             #     here we are going to send an email
