@@ -100,15 +100,13 @@ class Order(db.Model):
     location = db.Column(db.Text, nullable=False)
     email = db.Column(db.String(255), nullable=True)
     phone = db.Column(db.String(255), nullable=True)
-    count = db.Column(db.Integer, nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, product_id, location, email, phone, count):
+    def __init__(self, product_id, location, email, phone):
         self.product_id = product_id
         self.location = location
         self.email = email
         self.phone = phone
-        self.count = count
 
 
 class OrderSchema(ma.Schema):

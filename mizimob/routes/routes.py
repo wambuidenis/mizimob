@@ -3,7 +3,7 @@ from flask_login import login_user, current_user, login_required
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
-from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail)
+from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail,OrderForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema)
 from mizimob.others.utils import  validate_email
@@ -72,8 +72,10 @@ def item(name):
 
 @app.route("/product/<string:name>/request", methods=['POST', "GET"])
 def more_info(name):
+    #  we need to add the actual form
+    form = OrderForm()
+
     #  we are going  to get the name from the database
-    # get images and file fron the database and sho them here
     lookup = Product.query.filter_by(name=name).first()
     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
     category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
@@ -84,11 +86,33 @@ def more_info(name):
     images = list()
     for media in media_data:
         images.append(media['file'])
+
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = category_mapper[f"{index}"]
-    print(lookup_data)
-    return render_template("request_item.html", product=lookup_data)
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            phone = form.phone.data
+            email = form.email.data
+            where = form.where.data
+            when = form.when.data
+        #     here we are going to send an email and also make a db entry
+            try :
+                order = Order(lookup.id,where,email,phone)
+                db.session.add(order)
+                db.session.commit()
+            #     here we are going to send an email
+
+            except Exception as e:
+                flash("Order not succesfully made","error")
+                return render_template("request_item.html", product=lookup_data, form=form)
+        else:
+            flash("Please make sure all information is valid", "error")
+            return render_template("request_item.html", product=lookup_data, form=form)
+    else:
+        return render_template("request_item.html", product=lookup_data, form=form)
+    return render_template("request_item.html", product=lookup_data ,form=form)
 
 
 @app.route("/product/<string:name>/Book", methods=['POST', "GET"])
@@ -187,7 +211,7 @@ def cart():
             lookup_data = Order.query.filter_by(email=phone_email).all() if validate_email(phone_email) else \
                 Order.query.filter_by(phone=phone_email ).all()
         else:
-            flash("Please make Sure Form Data is Valid.")
+            flash("Please make Sure Form Data is Valid.","error")
     else:
         form_ = PhoneEmail()
         return render_template("cart.html",form = form_)

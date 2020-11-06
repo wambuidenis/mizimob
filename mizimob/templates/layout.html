@@ -13,9 +13,9 @@
   <link href="{{ url_for('static',filename='assets/img/favicon.png') }}" rel="icon">
   <link href="{{ url_for('static',filename='assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Vendor CSS Files -->
   <link href="{{ url_for('static',filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static',filename='assets/vendor/icofont/icofont.min.css') }}" rel="stylesheet">
@@ -52,12 +52,9 @@
     <!-- ======= Navbar ======= -->
   <nav class="navbar navbar-light custom-navbar" id="navbar">
     <div class="container">
-      <a class="navbar-brand" href="index.html">
+      <a class="navbar-brand" href="{{ url_for('home') }}">
           <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" class="mt-4" height="70" ®alt="Mizimob">
       </a>
-
-
-
 {#      <!-- <a href="#" class="burger" data-toggle="collapse" data-target="#main-navbar">#}
 {#        <span></span>#}
 {#      </a> -->#}

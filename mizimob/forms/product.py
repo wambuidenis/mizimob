@@ -99,3 +99,4 @@ class OrderForm(FlaskForm):
 class PhoneEmail(FlaskForm):
     email_phone = StringField("Email/Phone", validators=[DataRequired(), Email()])
     submit = SubmitField("Get Orders")
+
