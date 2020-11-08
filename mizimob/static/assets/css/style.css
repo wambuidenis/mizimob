@@ -9,7 +9,7 @@
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Yeseva One", monosapce;
+  font-family: 'Nunito', sans-serif;
   color: #0d1e2d;
 }
 
@@ -22,7 +22,7 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: "Yeseva One", sans-serif;
+  font-family: 'Nunito', sans-serif;
 }
 
 .section {

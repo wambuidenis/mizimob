@@ -13,10 +13,8 @@
   <link href="{{ url_for('static',filename='assets/img/favicon.png') }}" rel="icon">
   <link href="{{ url_for('static',filename='assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-<!-- <link href="https://fonts.googleapis.com/css?family=https://fonts.googleapis.com/css?family=Inconsolata:400,500,
-600,700|Raleway:400,400i,500,500i,600,600i,700,700i" rel="stylesheet"> -->
-<link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+
   <!-- Vendor CSS Files -->
   <link href="{{ url_for('static',filename='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static',filename='assets/vendor/icofont/icofont.min.css') }}" rel="stylesheet">
@@ -73,7 +71,7 @@
                     {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                             {% for category,message in messages %}
-                            <div class="alert alert-{{ category }} col-sm-12 col-md-8 col-lg-6">{{message}}</div>
+                            <div class="alert alert-{{ category }}">{{message}}</div>
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
@@ -101,27 +99,27 @@
               <div class="sticky-content">
                 <h3 class="h3 mt-5 text-muted">Orders</h3>
                   <hr>
-                <div class="mb-5" id="content">
-{#                    item start#}
-                    <a href="#" class="row" >
-                        <div class="ml-2">1.</div>
-                        <img src="{{ url_for('static',filename='uploads/abstract-1602587418307-7523.jpg') }}"
-                             height="40px" class="ml-3 col-3"
-                             alt="" id="icon">
-                        <div class="col-6  row ml-1">
-                            <h6>
-                                Lorem ipsum dolor.
-                            </h6>
-                            <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, minima!</small>
+                  {% for order in orders %}
+
+                        <div class="mb-5" id="content">
+        {#                    item start#}
+                            <a href="{{ url_for('item_view',name=order[1].name) }}" target="_blank" >
+                                <div class="ml-2">{{ order[0].id }}.</div>
+{#                                <img src="{{ url_for('static',filename=f'uploads/{order[2].file} ') }}"#}
+{#                                     height="40px" class="ml-3 col-3"#}
+{#                                     alt="" id="icon">#}
+                                <div class="col-6 ml-1">
+                                    <div class="row">
+                                        <h6>{{ order[1].name }}.</h6>
+                                    </div>
+                                    <div class="row ">
+                                        <h6 class="text-muted">{{  order[1].description }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+        {#                    item end#}
                         </div>
-                        <div class="col-1 mt-5">
-                            <p class="badge badge-primary">
-                                X5
-                            </p>
-                        </div>
-                    </a>
-{#                    item end#}
-                </div>
+                  {% endfor %}
                 </p>
               </div>
             </div>

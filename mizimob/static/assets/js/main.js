@@ -68,4 +68,35 @@
     });
   });
 
+
+
+
+const singlePicker = (id) => {
+    /* START PICKERS*/
+    let start = new Date(),
+        prevDay,
+        startHours = 9;
+    // 09:00 AM
+    start.setHours(9);
+    start.setMinutes(0);
+    // If today is Saturday or Sunday set 10:00 AM
+    if ([6, 0].indexOf(start.getDay()) !== -1) {
+        start.setHours(10);
+        startHours = 10
+    }
+    $(`#${id}`).datepicker({
+        language: 'en',
+        startDate: start,
+        minDate: new Date(),
+        position: "top left",
+        multipleDatesSeparator : " •• ",
+        clearButton : true  ,
+        view : "months",
+        showOtherMonths : true
+    });
+    /*END PICKER DATES*/
+}
+
+singlePicker("when")
+
 })(jQuery);

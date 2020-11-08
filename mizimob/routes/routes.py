@@ -3,11 +3,12 @@ from flask_login import login_user, current_user, login_required
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
-from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail,OrderForm)
+from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema)
-from mizimob.others.utils import  validate_email,validate_phone,send_email
+from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body,crop_max_square
 import os
+from PIL import Image
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -46,7 +47,6 @@ def home():
             file = "default.jpg"
             product["image"] = file
 
-        print(product)
     return render_template("index.html", products=new_products)
 
 
@@ -66,8 +66,27 @@ def item(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = category_mapper[f"{index}"]
-    print(lookup_data)
     return render_template("work-single.html", product=lookup_data)
+
+
+@app.route('/cart/view/<string:name>')
+def item_view(name):
+    #  we are going  to get the name from the database
+    # get images and file fron the database and sho them here
+    lookup = Product.query.filter_by(name=name).first()
+    media_lookup = Media.query.filter_by(product_id=lookup.id).all()
+    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
+    # media_data
+    lookup_data = product_schema.dump(lookup)
+    media_data = images_schema.dump(media_lookup)
+    images = list()
+    for media in media_data:
+        images.append(media['file'])
+    lookup_data["images"] = images
+    index = lookup_data["category"]
+    lookup_data["category"] = category_mapper[f"{index}"]
+    print(lookup_data)
+    return render_template("cart_view.html", product=lookup_data)
 
 
 @app.route("/product/<string:name>/request", methods=['POST', "GET"])
@@ -97,43 +116,52 @@ def more_info(name):
             email = form.email.data
             where = form.where.data
             when = form.when.data
-        #     here we are going to send an email and also make a db entry
-            try :
-                order = Order(lookup.id,where,when,email,phone)
-                db.session.add(order)
-                db.session.commit()
-            #     here we are going to send an email
+            #     here we are going to send an email and also make a db entry
+            if validate_phone(phone):
+                if validate_email(email):
+                    try:
+                        order = Order(lookup.id, where, when, email, phone)
+                        db.session.add(order)
+                        if db.session.commit():
+                            return render_template("request_item.html", product=lookup_data, form=form, booked=True)
+                        else:
+                            return render_template("request_item.html", product=lookup_data, form=form, booked=True)
+                        # here we are going to send an email
+                        # send_email(email,f"Order for the product {lookup.name} has been successfully made.",reset_body())
+                    except Exception as e:
+                        flash("Order not made. Please confirm data and try again", "error")
+                else:
+                    flash("email not valid", "error")
+            else:
+                flash("phone number is not valid", "error")
 
-            except Exception as e:
-                flash("Order not succesfully made","error")
-                return render_template("request_item.html", product=lookup_data, form=form)
         else:
             flash("Please make sure all information is valid", "error")
-            return render_template("request_item.html", product=lookup_data, form=form)
+            return render_template("request_item.html", product=lookup_data, form=form, booked=False)
     else:
-        return render_template("request_item.html", product=lookup_data, form=form)
-    return render_template("request_item.html", product=lookup_data ,form=form)
+        return render_template("request_item.html", product=lookup_data, form=form, booked=False)
+    return render_template("request_item.html", product=lookup_data, form=form, booked=False)
 
 
-@app.route("/product/<string:name>/Book", methods=['POST', "GET"])
-def make_booking(name):
-    #  we are going  to get the name from the database
-    # get images and file fron the database and sho them here
-    lookup = Product.query.filter_by(name=name).first()
-    media_lookup = Media.query.filter_by(product_id=lookup.id).all()
-    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
-
-    # media_data
-    lookup_data = product_schema.dump(lookup)
-    media_data = images_schema.dump(media_lookup)
-    images = list()
-    for media in media_data:
-        images.append(media['file'])
-    lookup_data["images"] = images
-    index = lookup_data["category"]
-    lookup_data["category"] = category_mapper[f"{index}"]
-    print(lookup_data)
-    return render_template("finalize_request.html", product=lookup_data)
+# @app.route("/product/<string:name>/Book", methods=['POST', "GET"])
+# def make_booking(name):
+#     #  we are going  to get the name from the database
+#     # get images and file fron the database and sho them here
+#     lookup = Product.query.filter_by(name=name).first()
+#     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
+#     category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
+#
+#     # media_data
+#     lookup_data = product_schema.dump(lookup)
+#     media_data = images_schema.dump(media_lookup)
+#     images = list()
+#     for media in media_data:
+#         images.append(media['file'])
+#     lookup_data["images"] = images
+#     index = lookup_data["category"]
+#     lookup_data["category"] = category_mapper[f"{index}"]
+#     print(lookup_data)
+#     return render_template("finalize_request.html", product=lookup_data)
 
 
 @app.route("/admin/login", methods=["POST", 'GET'])
@@ -201,22 +229,39 @@ def add_category():
     return render_template()
 
 
-@app.route('/cart',methods=['POST',"GET"])
+@app.route('/cart', methods=['POST', "GET"])
 def cart():
     form_ = PhoneEmail()
+    data = list()
     if request.method == "POST":
         if form_.validate_on_submit():
             phone_email = form_.email_phone.data
             # get data from the database
-            lookup_data = Order.query.filter_by(email=phone_email).all() if validate_email(phone_email) else \
-                Order.query.filter_by(phone=phone_email ).all()
+            # lookup_data = Order.query.filter_by(email=phone_email).all() if validate_phone(phone_email) else \
+            #     Order.query.filter_by(phone=phone_email).all()
+            if validate_email(phone_email):
+                data_ = Order.query.filter_by(email=phone_email).all()
+            else:
+                data_= Order.query.filter_by(phone=phone_email).all()
+
+            for item in data_:
+                new = list()
+                id = item.product_id
+                product = Product.query.get(id)
+                image = Media.query.filter_by(product_id=id).first()
+                new.append(item)
+                new.append(product)
+                new.append(image)
+                data.append(new)
+
+            print(data)
         else:
-            flash("Please make Sure Form Data is Valid.","error")
+            flash("Please make Sure Form Data is Valid.", "error")
     else:
         form_ = PhoneEmail()
-        return render_template("cart.html",form = form_)
-    #  orders=lookup_data
-    return render_template("cart.html", form=form_)
+        return render_template("cart.html", form=form_)
+    #  orders=lookup_datarr
+    return render_template("cart.html", form=form_, orders=data)
 
 
 @app.route("/db/seed", methods=["POST"])
@@ -265,8 +310,13 @@ def add():
             filenames = []
             for file in files:
                 filenames.append(file.filename)
-                path = os.path.join(os.getcwd(),"mizimob","static","uploads",file.filename)
+                path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
+                # cropping the image
                 file.save(path)
+
+                im = Image.open(path)
+                image = crop_max_square(im)
+                image.save(path, quality=100)
 
                 # added the database
                 lookup = Media(data['id'], file.filename)
@@ -278,4 +328,3 @@ def add():
         flash("Error with the form", "warning")
 
     return render_template("add.html", form=form)
-

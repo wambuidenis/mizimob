@@ -63,7 +63,7 @@
   $(window).on('load', function() {
     AOS.init({
       easing: 'ease',
-      duration: 1000,
+      duration: 500,
       once: true
     });
   });

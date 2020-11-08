@@ -83,7 +83,6 @@ class CategoryForm(FlaskForm):
     @staticmethod
     def validate_category(self, name):
         category = Category.query.filter_by(name=name.data).first()
-
         if category is not None:
             flash("Category Name Already Exists.", "warning")
 
@@ -97,6 +96,6 @@ class OrderForm(FlaskForm):
 
 
 class PhoneEmail(FlaskForm):
-    email_phone = StringField("Email/Phone", validators=[DataRequired(), Email()])
+    email_phone = StringField("Email/Phone", validators=[DataRequired()])
     submit = SubmitField("Get Orders")
 
