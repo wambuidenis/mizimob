@@ -34,7 +34,7 @@
 
 {#adding the video background here #}
 <div id="vid_bg">
-    <video id="bg_vid" src="{{ url_for('static',filename='uploads/bg.mp4') }}" autoplay="true" loop="true"
+    <video id="bg_vid" src="{{ url_for('static',filename='uploads/bmg.mp4') }}" autoplay="true" loop="true"
            muted="true"></video>
 </div>
 <div class="overlay">
@@ -123,7 +123,10 @@
 
     overlay.css("width","100vw")
     overlay.css("height","112vh");
+    {#background: rgb(0,167,251);
+    {#background: linear-gradient(345deg, rgba(0,167,251,1) 0%, rgba(167,255,14,0.9514180672268907) 100%);#}
     overlay.css("background","rgba(240,240,240,0.9)");
+    overlay.css("background","linear-gradient(345deg, rgba(144,218,255,1) 0%, rgba(252,252,252,0.32396708683473385) 100%)");
     overlay.css("position","absolute");
     overlay.css("top","0px");
     overlay.css("blur","40px");
