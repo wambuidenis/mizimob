@@ -78,7 +78,7 @@ class ProductForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     name = StringField("name", validators=[DataRequired()])
-    submit = SubmitField("Save Category")
+    submit = SubmitField("Add Category")
 
     @staticmethod
     def validate_category(self, name):

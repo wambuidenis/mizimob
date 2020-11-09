@@ -1,8 +1,15 @@
 {% extends 'product_layout.html' %}
 {% block content %}
     <div class="container">
-        <h5 class="mt-3 mb-3">Add Item</h5>
+        <div class="row">
+            <h5 class="mt-3 mb-3 col-8">Add Item</h5>
+        </div>
+
         <hr>
+        <div class="row col-lg-12">
+            <div class="btn btn-sm btn-outline-primary col-lg-2 col-md-4 col-sm-4 offset-lg-10 offset-md-8 col-sm-8
+            offset-sm-4">+ Add category</div>
+        </div>
         <form action="{{ url_for('add') }}" method="POST" class="mb-4 mt-5" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -15,20 +22,20 @@
 
     <div class="row">
 
-                 <div class="form-group col-lg-6 ">
-                    {{ form.title.label(class='form-control-label')}}
-                    {% if form.title.errors %}
-                    {{ form.title(class="form-control col-lg-12 form-control-sm is-invalid
-                    col-sm-12")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.title.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.title(class="form-control  col-lg-12 form-control-sm col-sm-12 ")}}
-                    {% endif %}
-                </div>
+         <div class="form-group col-lg-6 ">
+            {{ form.title.label(class='form-control-label')}}
+            {% if form.title.errors %}
+            {{ form.title(class="form-control col-lg-12 form-control-sm is-invalid
+            col-sm-12")}}
+            <div class="invalid-feedback">
+                {% for error in form.title.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.title(class="form-control  col-lg-12 form-control-sm col-sm-12 ")}}
+            {% endif %}
+        </div>
 
         <div class="form-group col-lg-6">
                     {{ form.category.label(class='form-control-label')}}
@@ -43,9 +50,9 @@
                     {{ form.category(class="form-control col-lg-12 col-sm-12")}}
                     {% endif %}
         </div>
-</div>
-<div class="row ">
-    <div class="form-group col-lg-6">
+    </div>
+    <div class="row ">
+        <div class="form-group col-lg-6">
                     {{ form.price.label(class='form-control-label')}}
                     {% if form.price.errors %}
                     {{ form.price(class="form-control col-lg-12 form-control-sm is-invalid ")}}
@@ -59,7 +66,7 @@
                     {% endif %}
                 </div>
 
-    <div class="form-group col-lg-6">
+        <div class="form-group col-lg-6">
                     {{ form.media.label(class='form-control-label')}}
                     {% if form.media.errors %}
                     {{ form.media(class="form-control-file col-lg-12 ")}}

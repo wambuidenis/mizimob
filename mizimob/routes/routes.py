@@ -3,10 +3,10 @@ from flask_login import login_user, current_user, login_required
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
-from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm)
+from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema)
-from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body,crop_max_square
+from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square
 import os
 from PIL import Image
 
@@ -242,7 +242,7 @@ def cart():
             if validate_email(phone_email):
                 data_ = Order.query.filter_by(email=phone_email).all()
             else:
-                data_= Order.query.filter_by(phone=phone_email).all()
+                data_ = Order.query.filter_by(phone=phone_email).all()
 
             for item in data_:
                 new = list()
@@ -328,3 +328,44 @@ def add():
         flash("Error with the form", "warning")
 
     return render_template("add.html", form=form)
+
+
+@app.route("/admin/orders/manage", methods=['POST', "GET"])
+def order():
+    # getting all the orders
+    orders_lookup = Order.query.all()
+    orders_data = orders_schema.dump(orders_lookup)
+    print(orders_data)
+
+
+    for order in orders_lookup:
+        print(order)
+        order_ = list()
+        lookup = Product.query.get(order.product_id)
+        order_.append(order)
+        order_.append(lookup)
+        print(order_)
+
+    # for item in
+    # print(order)
+    # get products from the database
+    products = Product.query.all()
+    product_dict = products_schema.dump(products)
+
+    # name
+    new_products = list()
+    category_mapper = {"1": "events", "2": "title", "3": "rental"}
+    for product in product_dict:
+        index = product["category"]
+        product["category"] = category_mapper[f"{index}"]
+        new_products.append(product)
+        try:
+            lookup = Media.query.filter_by(product_id=product["id"]).first()
+            image = image_schema.dump(lookup)
+            file = image_schema.dump(lookup)["file"]
+            product["image"] = file
+        except KeyError:
+            file = "default.jpg"
+            product["image"] = file
+
+    return render_template("manage_order.html", products=new_products,orders=orders_lookup)
