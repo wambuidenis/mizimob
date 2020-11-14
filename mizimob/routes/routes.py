@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
-from flask_login import login_user, current_user, login_required
+from flask_login import login_user, current_user, login_required,logout_user
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
@@ -407,3 +407,9 @@ def order():
             product["image"] = file
 
     return render_template("manage_order.html", products=new_products, orders=orders_lookup)
+
+
+@app.route("/logout",methods=["POST","GET"])
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
