@@ -26,9 +26,11 @@ order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
 categories = Category.query.all()
-lst = dict()
+back_mapper = dict()
+front_mapper = dict()
 for x in categories:
-    lst.update({x.name.lower().capitalize(): x.id})
+    back_mapper.update({x.name.lower().capitalize(): x.id})
+    front_mapper.update({x.id : x.name.lower().capitalize()})
 
 
 @app.route('/')
@@ -38,10 +40,9 @@ def home():
     product_dict = products_schema.dump(products)
     # name
     new_products = list()
-    category_mapper = {"1": "events", "2": "title", "3": "rental"}
     for product in product_dict:
         index = product["category"]
-        product["category"] = category_mapper[f"{index}"]
+        product["category"] = front_mapper[int(index)]
         new_products.append(product)
         try:
             lookup = Media.query.filter_by(product_id=product["id"]).first()
@@ -51,7 +52,6 @@ def home():
         except KeyError:
             file = "default.jpg"
             product["image"] = file
-
     return render_template("index.html", products=new_products)
 
 
@@ -61,7 +61,6 @@ def item(name):
     # get images and file fron the database and sho them here
     lookup = Product.query.filter_by(name=name).first()
     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
-    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
     # media_data
     lookup_data = product_schema.dump(lookup)
     media_data = images_schema.dump(media_lookup)
@@ -70,7 +69,7 @@ def item(name):
         images.append(media['file'])
     lookup_data["images"] = images
     index = lookup_data["category"]
-    lookup_data["category"] = category_mapper[f"{index}"]
+    lookup_data["category"] = front_mapper[int(index)]
     return render_template("work-single.html", product=lookup_data)
 
 
@@ -80,7 +79,6 @@ def item_view(name):
     # get images and file fron the database and sho them here
     lookup = Product.query.filter_by(name=name).first()
     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
-    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
     # media_data
     lookup_data = product_schema.dump(lookup)
     media_data = images_schema.dump(media_lookup)
@@ -89,8 +87,7 @@ def item_view(name):
         images.append(media['file'])
     lookup_data["images"] = images
     index = lookup_data["category"]
-    lookup_data["category"] = category_mapper[f"{index}"]
-    print(lookup_data)
+    lookup_data["category"] = front_mapper[int(index)]
     return render_template("cart_view.html", product=lookup_data)
 
 
@@ -102,8 +99,6 @@ def more_info(name):
     #  we are going  to get the name from the database
     lookup = Product.query.filter_by(name=name).first()
     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
-    category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
-
     # media_data
     lookup_data = product_schema.dump(lookup)
     media_data = images_schema.dump(media_lookup)
@@ -113,7 +108,7 @@ def more_info(name):
 
     lookup_data["images"] = images
     index = lookup_data["category"]
-    lookup_data["category"] = category_mapper[f"{index}"]
+    lookup_data["category"] = front_mapper[int(index)]
 
     if request.method == "POST":
         if form.validate_on_submit():
@@ -157,7 +152,6 @@ def login():
     login = LoginForm()
     # checking the form data status
     if login.validate_on_submit():
-        print("form_data", login.email.data, login.password.data)
         user = User.query.filter_by(email=login.email.data).first()
         if user and bcrypt.check_password_hash(user.password, login.password.data):
             next_page = request.args.get("next")
@@ -180,10 +174,9 @@ def products_all():
 
     # name
     new_products = list()
-    category_mapper = {"1": "events", "2": "title", "3": "rental"}
     for product in product_dict:
         index = product["category"]
-        product["category"] = category_mapper[f"{index}"]
+        product["category"] = front_mapper[int(index)]
         new_products.append(product)
         try:
             lookup = Media.query.filter_by(product_id=product["id"]).first()
@@ -202,14 +195,11 @@ def test():
     return render_template("withmenu.html")
 
 
-print(lst)
-
 
 @app.route("/admin/product/edit/<string:name>", methods=["POST", "GET"])
 @login_required
 def edit_project(name):
     lookup = Product.query.filter_by(name=name).first()
-    print(product_schema.dump(lookup))
     form = ProductForm()
     if request.method == "POST":
         if form.validate_on_submit():
@@ -217,7 +207,7 @@ def edit_project(name):
             lookup.expires = form.expires.data
             lookup.price = form.price.data
             lookup.description = form.description.data
-            lookup.category = int(lst[form.category.data])
+            lookup.category = int(back_mapper[form.category.data])
 
             lookup.active = True if form.active.data == "Active" else False
             db.session.commit()
@@ -280,9 +270,6 @@ def cart():
     if request.method == "POST":
         if form_.validate_on_submit():
             phone_email = form_.email_phone.data
-            # get data from the database
-            # lookup_data = Order.query.filter_by(email=phone_email).all() if validate_phone(phone_email) else \
-            #     Order.query.filter_by(phone=phone_email).all()
             if validate_email(phone_email):
                 data_ = Order.query.filter_by(email=phone_email).all()
             else:
@@ -297,8 +284,6 @@ def cart():
                 new.append(product)
                 new.append(image)
                 data.append(new)
-
-            print(data)
         else:
             flash("Please make Sure Form Data is Valid.", "error")
     else:
@@ -335,11 +320,10 @@ def add():
     form = ProductForm()
     categories = Category.query.all()
     categories = categories_schema.dump(categories)
-    print(categories)
     if request.method == "POST":
         if form.validate_on_submit():
             title = form.title.data
-            category = int(lst[form.category.data])
+            category = int(back_mapper[form.category.data])
             price = form.price.data
             description = form.description.data
             expires = form.expires.data
@@ -382,18 +366,13 @@ def order():
     # getting all the orders
     orders_lookup = Order.query.all()
     orders_data = orders_schema.dump(orders_lookup)
-    print(orders_data)
-
     for order in orders_lookup:
-        print(order)
         order_ = list()
         lookup = Product.query.get(order.product_id)
         order_.append(order)
         order_.append(lookup)
-        print(order_)
 
     # for item in
-    # print(order)
     # get products from the database
     products = Product.query.all()
     product_dict = products_schema.dump(products)
