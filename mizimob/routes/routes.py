@@ -10,12 +10,9 @@ from mizimob.others.utils import validate_email, validate_phone, send_email, res
 import os
 from PIL import Image
 
-
-
-
-#---------------------------------
-#------- SETTING GLOBAL VARS -----
-#---------------------------------
+# ---------------------------------
+# ------- SETTING GLOBAL VARS -----
+# ---------------------------------
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
@@ -36,12 +33,7 @@ back_mapper = dict()
 front_mapper = dict()
 for x in categories:
     back_mapper.update({x.name.lower().capitalize(): x.id})
-    front_mapper.update({x.id : x.name.lower().capitalize()})
-
-
-# getting the category
-category = Category.query.all()
-
+    front_mapper.update({x.id: x.name.lower().capitalize()})
 
 
 @app.route('/')
@@ -63,7 +55,7 @@ def home():
         except KeyError:
             file = "default.jpg"
             product["image"] = file
-    return render_template("index.html", products=new_products)
+    return render_template("index.html", products=new_products, categories=categories)
 
 
 @app.route('/product/<string:name>')
@@ -193,14 +185,13 @@ def products_all():
         except KeyError:
             file = "default.jpg"
             product["image"] = file
-    return render_template("manage_product.html", products=new_products, categories=category)
+    return render_template("manage_product.html", products=new_products, categories=categories)
 
 
 @app.route("/test")
 @login_required
 def test():
     return render_template("withmenu.html")
-
 
 
 @app.route("/admin/product/edit/<string:name>", methods=["POST", "GET"])
