@@ -10,6 +10,12 @@ from mizimob.others.utils import validate_email, validate_phone, send_email, res
 import os
 from PIL import Image
 
+
+
+
+#---------------------------------
+#------- SETTING GLOBAL VARS -----
+#---------------------------------
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
@@ -31,6 +37,11 @@ front_mapper = dict()
 for x in categories:
     back_mapper.update({x.name.lower().capitalize(): x.id})
     front_mapper.update({x.id : x.name.lower().capitalize()})
+
+
+# getting the category
+category = Category.query.all()
+
 
 
 @app.route('/')
@@ -168,10 +179,6 @@ def products_all():
     # get products from the database
     products = Product.query.all()
     product_dict = products_schema.dump(products)
-
-    # getting the category
-    category = Category.query.all()
-
     # name
     new_products = list()
     for product in product_dict:

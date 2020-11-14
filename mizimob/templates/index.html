@@ -19,9 +19,11 @@
                   <!--NAVIGATION-->
                   <div id="filters" class="filters">
                       <a href="#" data-filter="*" class="active">All</a>
-                      <a href="#" data-filter=".events">Events</a>
-                      <a href="#" data-filter=".travel">Travel</a>
-                      <a href="#" data-filter=".rental">Rentals</a>
+                      {%  for category in categories %}
+                              <a href="#" data-filter=".{{ category.name }}">{{ (category.name).lower().capitalize()
+                                      }}</a>
+                      {%  endfor %}
+
                   </div>
                   <!--END NAVIGATION-->
                   </div>
