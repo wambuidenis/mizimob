@@ -31,9 +31,15 @@ orders_schema = OrderSchema(many=True)
 categories = Category.query.all()
 back_mapper = dict()
 front_mapper = dict()
-for x in categories:
-    back_mapper.update({x.name.lower().capitalize(): x.id})
-    front_mapper.update({x.id: x.name.lower().capitalize()})
+
+
+def mapper():
+    for x in categories:
+        back_mapper.update({x.name.lower().capitalize(): x.id})
+        front_mapper.update({x.id: x.name.lower().capitalize()})
+
+
+mapper()
 
 
 @app.route('/')
@@ -303,7 +309,7 @@ def seeder():
         return {"Error!": "DB Aleardy Seeded",
                 "details": {
                     'user': user_schema.dump(user)
-                    }
+                }
                 }, 500
 
     return {'user': user_schema.dump(user)}, 201
@@ -314,6 +320,10 @@ def add():
     form = ProductForm()
     categories = Category.query.all()
     categories = categories_schema.dump(categories)
+
+    #update_mapper
+    mapper()
+
     if request.method == "POST":
         if form.validate_on_submit():
             title = form.title.data
