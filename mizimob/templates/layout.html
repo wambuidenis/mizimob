@@ -25,47 +25,90 @@
 
 {#  rel="stylesheet">#}
 
+{#    new data start #}
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Mizimob</title>
+{#		<link rel="shortcut icon" href="favicon.ico">#}
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='rgbKineticSlider/css/base.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='rgbKineticSlider/css/demo.css') }}" />
+		<link rel="stylesheet" href="{{ url_for('static',filename='rgbKineticSlider/css/fontawesome/css/all.css') }}">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    {#    air date picker #}
+    <link href="{{ url_for('static',filename='assets/vendor/airDatePicker/css/datepicker.css') }}"
+        rel="stylesheet">
+    <script src="{{ url_for('static',filename='assets/vendor/airDatePicker/js/datepicker.js') }}"></script>
+    <script src="{{ url_for('static',filename='assets/vendor/airDatePicker/js/i18n/datepicker.en.js') }}"></script>
+    {#    end picker #}
+		<script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
+		<!--script src="//tympanus.net/codrops/adpacks/analytics.js"></script-->
+{#new data end#}
+
+
+
   <!-- Template Main CSS File -->
   <link href="{{ url_for('static',filename='assets/css/style.css') }}" rel="stylesheet">
 
 </head>
-
 <body>
+{#new head start#}
+	<body class="demo-1 loading" id='body'>
+		<main>
+			<div class="frame" id="nav">
+				<div class="frame__title-wrap">
+					<h1 class="frame__title"> <a href="{{ url_for('home') }}" style="color:#fff;">Mizimob</a></h1>
+				</div>
+				<div class="frame__links">
+					<h1 class="cart"><a href="{{ url_for('cart') }}" style="color:#fff;"><i class="fas fa-shopping-basket"></i></a></h1>
+				</div>
+
+			</div>
+			<div class="content">
+				<div id="rgbKineticSlider" class="rgbKineticSlider"></div>
+				<nav>
+			        <a href="#" id="prev" class="main-nav prev" data-nav="previous">Prev <span></span></a>
+			        <a href="#" id="next" class="main-nav next" data-nav="next">Next <span></span></a>
+                </nav>
+			</div>
+		</main>
+
+{#new head end#}
 
 {#adding the video background here #}
-<div id="vid_bg">
-    <video id="bg_vid" src="{{ url_for('static',filename='uploads/bmg.mp4') }}" autoplay="true" loop="true"
-           muted="true"></video>
-</div>
-<div class="overlay">
-    <div class="text-container">
-        <div class="heading">MIZIMOB</div>
-        <div class="subtext">This shall be a small description about the services offered.</div>
-        <div class="btn btn-sm btn-outline-dark mt-3 col-lg-5">More about us <i class="far
-        fa-arrow-alt-circle-right"></i></div>
-    </div>
-</div>
+{#<div id="vid_bg">#}
+{#    <video id="bg_vid" src="{{ url_for('static',filename='uploads/bmg.mp4') }}" autoplay="true" loop="true"#}
+{#           muted="true"></video>#}
+{#</div>#}
+{#<div class="overlay">#}
+{#    <div class="text-container">#}
+{#        <div class="heading">MIZIMOB</div>#}
+{#        <div class="subtext">This shall be a small description about the services offered.</div>#}
+{#        <div class="btn btn-sm btn-outline-dark mt-3 col-lg-5">More about us <i class="far#}
+{#        fa-arrow-alt-circle-right"></i></div>#}
+{#    </div>#}
+{#</div>#}
 
 {#end vidoe background#}
 <!--The video player BG start-->
-<div id="">
-    <!-- ======= Navbar ======= -->
-  <nav class="navbar navbar-light custom-navbar" id="navbar">
-    <div class="container">
-      <a class="navbar-brand" href="{{ url_for('home') }}">
-          <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" class="mt-4" height="70" ®alt="Mizimob">
-      </a>
+{#<div id="">#}
+{#    <!-- ======= Navbar ======= -->#}
+{#  <nav class="navbar navbar-light custom-navbar" id="navbar">#}
+{#    <div class="container">#}
+{#      <a class="navbar-brand" href="{{ url_for('home') }}">#}
+{#          <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" class="mt-4" height="70" ®alt="Mizimob">#}
+{#      </a>#}
 {#      <!-- <a href="#" class="burger" data-toggle="collapse" data-target="#main-navbar">#}
 {#        <span></span>#}
 {#      </a> -->#}
-
-        <a href="{{ url_for('cart') }}" class="cart" id="cart" data-target="#main-navbar">
-            <img src="{{ url_for('static',filename='shopping.png') }}" alt="Cart" height="40">
-        </a>
-
-    </div>
-  </nav>
-</div>
+{##}
+{#        <a href="{{ url_for('cart') }}" class="cart" id="cart" data-target="#main-navbar">#}
+{#            <img src="{{ url_for('static',filename='shopping.png') }}" alt="Cart" height="40">#}
+{#        </a>#}
+{##}
+{#    </div>#}
+{#  </nav>#}
+{#</div>#}
 {#start main#}
 {% block content %}
 {% endblock content %}
@@ -105,38 +148,132 @@
 
   <!-- Template Main JS File -->
 <script src="{{ url_for('static',filename='assets/js/main.js' ) }}"></script>
-<script>
-    let interval = setInterval(()=>{
-    let bg = $(".vid_bg")
-    let body = $("body")
-    let navbar = $("#navbar");
-    let overlay = $(".overlay")
-    let textContainer = $(".text-container");
-    let vid = $("#bg_vid");
+
+{#        new scripts start#}
+        <script src="{{ url_for('static',filename='rgbKineticSlider/js/libs/imagesLoaded.pkgd.min.js') }}"></script>
+		<script src="{{ url_for('static',filename='rgbKineticSlider/js/libs/pixi.min.js') }}"></script>
+		<script src="{{ url_for('static',filename='rgbKineticSlider/js/libs/pixi-filters.min.js') }}"></script>
+		<script src="{{ url_for('static',filename='rgbKineticSlider/js/libs/TweenMax.min.js') }}"></script>
+		<script src="{{ url_for('static',filename='rgbKineticSlider/js/rgbKineticSlider.js') }}"></script>
+		<script>
+
+            // images setup
+			const images = [
+			    "{{ url_for('static',filename='rgbKineticSlider/img/nature-01.jpg') }}",
+			    "{{ url_for('static',filename='rgbKineticSlider/img/nature-02.jpg') }}",
+			    "{{ url_for('static',filename='rgbKineticSlider/img/nature-03.jpg') }}",
+			    "{{ url_for('static',filename='rgbKineticSlider/img/nature-04.jpg') }}",
+			];
+
+            // content setup
+			const texts = [
+				["Mizimob", "We dont stop"],
+			    ["Rentals", "We Offer Car Rental services"],
+			    ["Events", "We offer Events off all kinds"],
+			    ["Travel", "Travel To A Destination Of Choice With Us"],
+			]
+			rgbKineticSlider = new rgbKineticSlider({
+
+			    slideImages: images, // array of images > must be 1920 x 1080
+			    itemsTitles: texts, // array of titles / subtitles
+
+			    backgroundDisplacementSprite: 'img/map-9.jpg', // slide displacement image
+			    cursorDisplacementSprite: 'img/displace-circle.png', // cursor displacement image
+
+			    cursorImgEffect : true, // enable cursor effect
+			    cursorTextEffect : false, // enable cursor text effect
+			    cursorScaleIntensity : 0.65, // cursor effect intensity
+			    cursorMomentum : 0.14, // lower is slower
+
+			    swipe: true, // enable swipe
+			    swipeDistance : window.innerWidth * 0.4, // swipe distance - ex : 580
+			    swipeScaleIntensity: 4, // scale intensity during swipping
+
+			    slideTransitionDuration : 1, // transition duration
+			    transitionScaleIntensity : 30, // scale intensity during transition
+			    transitionScaleAmplitude : 160, // scale amplitude during transition
+
+			    nav: true, // enable navigation
+			    navElement: '.main-nav', // set nav class
+
+			    imagesRgbEffect : false, // enable img rgb effect
+			    imagesRgbIntensity : 0.9, // set img rgb intensity
+			    navImagesRgbIntensity : 80, // set img rgb intensity for regular nav
+
+			    textsDisplay : true, // show title
+			    textsSubTitleDisplay : true, // show subtitles
+			    textsTiltEffect : true, // enable text tilt
+			    googleFonts : ['Playfair Display:700', 'Roboto:400'], // select google font to use
+			    buttonMode : false, // enable button mode for title
+			    textsRgbEffect : true, // enable text rgb effect
+			    textsRgbIntensity : 0.03, // set text rgb intensity
+			    navTextsRgbIntensity : 15, // set text rgb intensity for regular nav
+
+			    textTitleColor : 'white', // title color
+			    textTitleSize : 125, // title size
+			    mobileTextTitleSize : 80, // title size
+			    textTitleLetterspacing : 3, // title letterspacing
+
+			    textSubTitleColor : 'white', // subtitle color ex : 0x000000
+			    textSubTitleSize : 21, // subtitle size
+			    mobileTextSubTitleSize : 21, // mobile subtitle size
+			    textSubTitleLetterspacing : 2, // subtitle letter spacing
+			    textSubTitleOffsetTop : 90, // subtitle offset top
+			    mobileTextSubTitleOffsetTop : 90, // mobile subtitle offset top
+			});
 
 
-    bg.css("width","100vw")
-    bg.css("height","100vh")
-    body.css("overflow-x","hidden")
-    navbar.css("top","0px");
-    navbar.css("position","absolute");
 
-    overlay.css("width","100vw")
-    overlay.css("height","112vh");
+		var num = $( window ).height() - 100;
+		$(window).bind('scroll', function () {
+			if ($(window).scrollTop() > num) {
+				$('#nav').addClass('hide');
+			} else {
+				$('#nav').removeClass('hide');
+			}
+		});
+
+		setInterval(()=>{
+			let handle = $("#next")
+			handle.trigger("click")
+			handle.trigger("mouseenter")
+			console.log("trigger")
+		},5000)
+
+		</script>
+
+{#        new scripts end#}
+    {#let interval = setInterval(()=>{#}
+    {#let bg = $(".vid_bg")#}
+    {#let body = $("body")#}
+    {#let navbar = $("#navbar");#}
+    {#let overlay = $(".overlay")#}
+    {#let textContainer = $(".text-container");#}
+    {#let vid = $("#bg_vid");#}
+
+
+    {#bg.css("width","100vw")#}
+    {#bg.css("height","100vh")#}
+    {#body.css("overflow-x","hidden")#}
+    {#navbar.css("top","0px");#}
+    {#navbar.css("position","absolute");#}
+    {##}
+    {#overlay.css("width","100vw")#}
+    {#overlay.css("height","112vh");#}
     {#background: rgb(0,167,251);
     {#background: linear-gradient(345deg, rgba(0,167,251,1) 0%, rgba(167,255,14,0.9514180672268907) 100%);#}
-    overlay.css("background","rgba(240,240,240,0.9)");
-    overlay.css("background","linear-gradient(345deg, rgba(144,218,255,1) 0%, rgba(252,252,252,0.32396708683473385) 100%)");
-    overlay.css("position","absolute");
-    overlay.css("top","0px");
-    overlay.css("blur","40px");
-
-    textContainer.css("position","absolute");
-    textContainer.css("left","50%");
-    textContainer.css("top","50%");
-    textContainer.css("transform","translate(-50%,-50%)");
-    vid.css("width","100vw")
-    vid.css("height","100vh")
+    {#overlay.css("background","rgba(240,240,240,0.9)");#}
+    {#overlay.css("background","linear-gradient(345deg, rgba(144,218,255,1) 0%, rgba(252,252,252,0.32396708683473385) 100%)");#}
+    {#overlay.css("position","absolute");#}
+    {#overlay.css("top","0px");#}
+    {#overlay.css("blur","40px");#}
+    {##}
+    {#textContainer.css("position","absolute");#}
+    {#textContainer.css("left","50%");#}
+    {#textContainer.css("top","50%");#}
+    {#textContainer.css("transform","translate(-50%,-50%)");#}
+    {#vid.css("width","100vw")#}
+    {#vid.css("height","100vh")#}
   },100)
 
      setTimeout(()=>{

@@ -516,3 +516,9 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   display:block;
   /*background-attachment : fixed;*/
 }
+.img-fluid {
+  border-radius:10px;
+}
+.img-fluid:hover {
+  border-radius:10px;
+}

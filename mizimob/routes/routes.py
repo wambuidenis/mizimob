@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, send_from_directory
 from flask_login import login_user, current_user, login_required
 from flask_sqlalchemy import sqlalchemy
 
@@ -40,6 +40,17 @@ def mapper():
 
 
 mapper()
+
+
+# serving some images
+@app.route("/img/map-9.jpg",methods=["GET"])
+def map_9():
+    return send_from_directory("img", filename="map-9.jpg")
+
+
+@app.route("/img/displace-circle.png",methods=["GET"])
+def map_10():
+    return send_from_directory("img", filename="displace-circle.png")
 
 
 @app.route('/')
@@ -320,10 +331,8 @@ def add():
     form = ProductForm()
     categories = Category.query.all()
     categories = categories_schema.dump(categories)
-
-    #update_mapper
+    # update_mapper
     mapper()
-
     if request.method == "POST":
         if form.validate_on_submit():
             title = form.title.data
