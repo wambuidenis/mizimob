@@ -5,10 +5,12 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField, Radi
     MultipleFileField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
-from mizimob.models.models import User, Product, Category,CategorySchema
+from mizimob.models.models import User, Product, Category, CategorySchema
+
 categories_schema = CategorySchema(many=True)
 categories_ = Category.query.all()
-categories = [(x.name).lower().capitalize() for x in categories_ ]
+categories = [(x.name).lower().capitalize() for x in categories_]
+
 
 class RegisterForm(FlaskForm):
     firstaname = StringField("Firstname", validators=[DataRequired()])
@@ -62,7 +64,7 @@ class ResetPassword(FlaskForm):
 
 class ProductForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    category = SelectField("Category", validators=[DataRequired()],choices=categories)
+    category = SelectField("Category", validators=[DataRequired()], choices=categories)
     price = StringField("Price", validators=[DataRequired()])
     media = MultipleFileField("Images/Videos", validators=[DataRequired(), FileAllowed(["jpg", "png", "mp4", "mkv"])])
     description = TextAreaField("Description", validators=[DataRequired()])
@@ -100,4 +102,3 @@ class OrderForm(FlaskForm):
 class PhoneEmail(FlaskForm):
     email_phone = StringField("Email/Phone", validators=[DataRequired()])
     submit = SubmitField("Get Orders")
-

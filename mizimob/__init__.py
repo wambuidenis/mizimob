@@ -1,17 +1,18 @@
 from flask import Flask, render_template
 from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy,sqlalchemy
+from flask_sqlalchemy import SQLAlchemy, sqlalchemy
 from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 db_pass = os.getenv('DBPASS')
 db_user = os.getenv('DBUSER')
-print(db_pass,db_user)
+print(db_pass, db_user)
 
 app = Flask(__name__)
 
@@ -28,7 +29,7 @@ try:
     migrate = Migrate(app, db)
 
 except sqlalchemy.exc.ProgrammingError as e:
-    print("error",e)
+    print("error", e)
 
 ma = Marshmallow(app)
 
@@ -48,11 +49,8 @@ app.config["MAIL_PORT"] = 587
 
 mail = Mail()
 
-
 # import models
 from mizimob.models import models
 
-
 #  import routes
 from mizimob.routes import routes
-

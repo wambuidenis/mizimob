@@ -293,12 +293,8 @@ def cart():
 
 @app.route("/db/seed", methods=["POST"])
 def seeder():
-    # category seed
-    category = Category("rentals")
-    db.session.add(category)
-
     # user seed
-    user = User("Admin", "Mode", "254719573310", "admin@gmail.com", bcrypt.generate_password_hash("1234"))
+    user = User("Admin", "Mode", "254719573310", "denniskiruku@gmail.com", bcrypt.generate_password_hash("1234"))
     db.session.add(user)
     try:
         #  category
@@ -306,11 +302,11 @@ def seeder():
     except sqlalchemy.exc.IntegrityError:
         return {"Error!": "DB Aleardy Seeded",
                 "details": {
-                    "category": category_schema.dump(category), 'user': user_schema.dump(user)
-                }
+                    'user': user_schema.dump(user)
+                    }
                 }, 500
 
-    return {"category": category_schema.dump(category), 'user': user_schema.dump(user)}, 201
+    return {'user': user_schema.dump(user)}, 201
 
 
 @app.route("/admin/product/add", methods=['POST', "GET"])
