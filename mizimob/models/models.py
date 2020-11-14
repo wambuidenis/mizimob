@@ -3,6 +3,21 @@ from mizimob import db, ma, login_manager
 from datetime import datetime
 
 
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
+
+    def __init__(self, name):
+        self.name = name
+
+
+class CategorySchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name")
+
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -11,6 +26,7 @@ def load_user(user_id):
 # we are going to create the model from a user class
 # the user mixen adds certain fields that are required matain the use session
 # it will add certain fileds to the user class tha are essential to the user login
+
 
 
 class User(db.Model, UserMixin):
@@ -79,19 +95,6 @@ class Media(db.Model):
 class MediaSchema(ma.Schema):
     class Meta:
         fields = ("id", "product_id", "file")
-
-
-class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False, unique=True)
-
-    def __init__(self, name):
-        self.name = name
-
-
-class CategorySchema(ma.Schema):
-    class Meta:
-        fields = ("id", "name")
 
 
 class Order(db.Model):
