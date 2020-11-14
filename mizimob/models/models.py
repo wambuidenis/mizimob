@@ -63,7 +63,7 @@ class Product(db.Model):
 
 class ProductSchema(ma.Schema):
     class Meta:
-        fields = ("id", "name", "category", "price", "media", "expires", "date_added", "active")
+        fields = ("id", "name", "category", "price", "media", "expires", "date_added", "active","description")
 
 
 class Media(db.Model):

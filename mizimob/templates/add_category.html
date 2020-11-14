@@ -1,0 +1,42 @@
+{% extends 'product_layout.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <h5 class="mt-3 mb-3 col-8">Add Category</h5>
+        </div>
+
+        <hr>
+        <div class="row col-lg-12">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('add') }}"> < Go To Add Product</a>
+        </div>
+        <form action="{{ url_for('add_category') }}" method="POST" class="mb-4 mt-5">
+            {{ form.hidden_tag() }}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                        {% for category,message in messages %}
+                        <div class="alert alert-{{ category }} col-sm-12 col-md-8 col-lg-6">{{message}}</div>
+                        {% endfor %}
+                    {% endif %}
+            {% endwith %}
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    {{ form.name.label(class='form-control-label')}}
+                    {% if form.name.errors %}
+                    {{ form.name(class="form-control col-lg-12 is-invalid col-sm-12")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.name.errors %}
+                        <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.name(class="form-control col-lg-12 col-sm-12")}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="mt-5 mb-3 mt-4">
+                 {{ form.submit(class="btn col-lg-3 col-md-6 col-sm-12 btn-sm btn-success btn-block mt-4")}}
+            </div>
+</form>
+        <br><br><br><br>
+{% endblock content %}

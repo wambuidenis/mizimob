@@ -25,6 +25,11 @@ images_schema = MediaSchema(many=True)
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
+categories = Category.query.all()
+lst = dict()
+for x in categories:
+    lst.update({x.name.lower().capitalize(): x.id})
+
 
 @app.route('/')
 def home():
@@ -143,27 +148,6 @@ def more_info(name):
     return render_template("request_item.html", product=lookup_data, form=form, booked=False)
 
 
-# @app.route("/product/<string:name>/Book", methods=['POST', "GET"])
-# def make_booking(name):
-#     #  we are going  to get the name from the database
-#     # get images and file fron the database and sho them here
-#     lookup = Product.query.filter_by(name=name).first()
-#     media_lookup = Media.query.filter_by(product_id=lookup.id).all()
-#     category_mapper = {"1": "Events", "2": "Title", "3": "Rental"}
-#
-#     # media_data
-#     lookup_data = product_schema.dump(lookup)
-#     media_data = images_schema.dump(media_lookup)
-#     images = list()
-#     for media in media_data:
-#         images.append(media['file'])
-#     lookup_data["images"] = images
-#     index = lookup_data["category"]
-#     lookup_data["category"] = category_mapper[f"{index}"]
-#     print(lookup_data)
-#     return render_template("finalize_request.html", product=lookup_data)
-
-
 @app.route("/admin/login", methods=["POST", 'GET'])
 def login():
     # login = LoginForm()
@@ -190,6 +174,10 @@ def products_all():
     # get products from the database
     products = Product.query.all()
     product_dict = products_schema.dump(products)
+
+    # getting the category
+    category = Category.query.all()
+
     # name
     new_products = list()
     category_mapper = {"1": "events", "2": "title", "3": "rental"}
@@ -205,8 +193,7 @@ def products_all():
         except KeyError:
             file = "default.jpg"
             product["image"] = file
-
-    return render_template("manage_product.html", products=new_products)
+    return render_template("manage_product.html", products=new_products, categories=category)
 
 
 @app.route("/test")
@@ -215,18 +202,75 @@ def test():
     return render_template("withmenu.html")
 
 
-@app.route("/admin/product/edit/<string:name>")
+print(lst)
+
+
+@app.route("/admin/product/edit/<string:name>", methods=["POST", "GET"])
 @login_required
 def edit_project(name):
     lookup = Product.query.filter_by(name=name).first()
+    print(product_schema.dump(lookup))
     form = ProductForm()
-    return render_template("edit.html", product=lookup, form=form)
+    if request.method == "POST":
+        if form.validate_on_submit():
+            lookup.name = form.title.data
+            lookup.expires = form.expires.data
+            lookup.price = form.price.data
+            lookup.description = form.description.data
+            lookup.category = int(lst[form.category.data])
+
+            lookup.active = True if form.active.data == "Active" else False
+            db.session.commit()
+
+            data = product_schema.dump(lookup)
+            files = form.media.data
+            filenames = []
+            for file in files:
+                filenames.append(file.filename)
+                path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
+
+                # cropping the image
+                file.save(path)
+
+                im = Image.open(path)
+                image = crop_max_square(im)
+                image.save(path, quality=100)
+
+                # added the database
+                lookup = Media(data['id'], file.filename)
+                db.session.add(lookup)
+                db.session.commit()
+            flash("Data Updated Sucessfully", "success")
+        else:
+            flash("Please Make sure all form field are valid", "warning")
+    else:
+        form.title.data = lookup.name
+        form.expires.data = lookup.expires
+        form.description.data = lookup.description
+        form.active.data = lookup.active
+        form.price.data = lookup.price
+    return render_template("edit.html", form=form, name=name)
 
 
-@app.route("/admin/category/add", methods=["POST"])
+@app.route("/admin/category/add", methods=["POST", "GET"])
 def add_category():
     form = CategoryForm()
-    return render_template()
+    if request.method == "POST":
+        if form.validate_on_submit():
+
+            # getting data from the form
+            name = form.name.data
+
+            # adding to the database
+            lookup = Category(name)
+            db.session.add(lookup)
+            db.session.commit()
+
+            flash(f"Category {name} Added Successfully", "success")
+        else:
+            flash("Error! Name Might exist.", "error")
+
+    return render_template("add_category.html", form=form)
 
 
 @app.route('/cart', methods=['POST', "GET"])
@@ -289,17 +333,19 @@ def seeder():
 @app.route("/admin/product/add", methods=['POST', "GET"])
 def add():
     form = ProductForm()
-    category_mapper = {"Event": "1", "Title": "2", "Rental": "3"}
+    categories = Category.query.all()
+    categories = categories_schema.dump(categories)
+    print(categories)
     if request.method == "POST":
         if form.validate_on_submit():
             title = form.title.data
-            category = int(category_mapper[form.category.data])
+            category = int(lst[form.category.data])
             price = form.price.data
             description = form.description.data
             expires = form.expires.data
             active = True if form.active.data == "Active" else False
+
             # data
-            # add to the db
             lookup = Product(title, description, category, price, expires, active)
             db.session.add(lookup)
             db.session.commit()
@@ -311,9 +357,11 @@ def add():
             for file in files:
                 filenames.append(file.filename)
                 path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
+
                 # cropping the image
                 file.save(path)
 
+                # cropping the image
                 im = Image.open(path)
                 image = crop_max_square(im)
                 image.save(path, quality=100)
@@ -326,8 +374,7 @@ def add():
         flash("form data submitted is valid", "success")
     else:
         flash("Error with the form", "warning")
-
-    return render_template("add.html", form=form)
+    return render_template("add.html", form=form, categories=categories)
 
 
 @app.route("/admin/orders/manage", methods=['POST', "GET"])
@@ -336,7 +383,6 @@ def order():
     orders_lookup = Order.query.all()
     orders_data = orders_schema.dump(orders_lookup)
     print(orders_data)
-
 
     for order in orders_lookup:
         print(order)
@@ -368,4 +414,4 @@ def order():
             file = "default.jpg"
             product["image"] = file
 
-    return render_template("manage_order.html", products=new_products,orders=orders_lookup)
+    return render_template("manage_order.html", products=new_products, orders=orders_lookup)

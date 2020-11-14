@@ -92,11 +92,13 @@ const singlePicker = (id) => {
         multipleDatesSeparator : " •• ",
         clearButton : true  ,
         view : "months",
-        showOtherMonths : true
+        showOtherMonths : true,
+
     });
     /*END PICKER DATES*/
 }
 
-singlePicker("when")
+singlePicker("when");
+singlePicker("expires")
 
 })(jQuery);

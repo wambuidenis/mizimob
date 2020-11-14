@@ -7,8 +7,8 @@
 
         <hr>
         <div class="row col-lg-12">
-            <div class="btn btn-sm btn-outline-primary col-lg-2 col-md-4 col-sm-4 offset-lg-10 offset-md-8 col-sm-8
-            offset-sm-4">+ Add category</div>
+            <a class="btn btn-sm btn-outline-primary col-lg-2 col-md-4 col-sm-4 offset-lg-10 offset-md-8 col-sm-8
+            offset-sm-4" href="{{ url_for('add_category') }}">+ Add category</a>
         </div>
         <form action="{{ url_for('add') }}" method="POST" class="mb-4 mt-5" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
@@ -21,7 +21,6 @@
                 {% endwith %}
 
     <div class="row">
-
          <div class="form-group col-lg-6 ">
             {{ form.title.label(class='form-control-label')}}
             {% if form.title.errors %}
@@ -38,64 +37,64 @@
         </div>
 
         <div class="form-group col-lg-6">
-                    {{ form.category.label(class='form-control-label')}}
-                    {% if form.category.errors %}
-                    {{ form.category(class="form-control col-lg-12 is-invalid col-sm-12")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.category.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.category(class="form-control col-lg-12 col-sm-12")}}
-                    {% endif %}
+            {{ form.category.label(class='form-control-label')}}
+            {% if form.category.errors %}
+            {{ form.category(class="form-control col-lg-12 is-invalid col-sm-12")}}
+            <div class="invalid-feedback">
+                {% for error in form.category.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.category(class="form-control col-lg-12 col-sm-12")}}
+            {% endif %}
         </div>
     </div>
     <div class="row ">
         <div class="form-group col-lg-6">
-                    {{ form.price.label(class='form-control-label')}}
-                    {% if form.price.errors %}
-                    {{ form.price(class="form-control col-lg-12 form-control-sm is-invalid ")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.price.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.price(class="form-control col-lg-12  form-control-sm ")}}
-                    {% endif %}
-                </div>
+            {{ form.price.label(class='form-control-label')}}
+            {% if form.price.errors %}
+            {{ form.price(class="form-control col-lg-12 form-control-sm is-invalid ")}}
+            <div class="invalid-feedback">
+                {% for error in form.price.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.price(class="form-control col-lg-12  form-control-sm ")}}
+            {% endif %}
+        </div>
 
         <div class="form-group col-lg-6">
-                    {{ form.media.label(class='form-control-label')}}
-                    {% if form.media.errors %}
-                    {{ form.media(class="form-control-file col-lg-12 ")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.media.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.media(class="form-control-file col-lg-12 ")}}
-                    {% endif %}
-                </div>
+            {{ form.media.label(class='form-control-label')}}
+            {% if form.media.errors %}
+            {{ form.media(class="form-control-file col-lg-12 ")}}
+            <div class="invalid-feedback">
+                {% for error in form.media.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.media(class="form-control-file col-lg-12 ")}}
+            {% endif %}
+        </div>
 
         </div>
 
 <div class="row">
     <div class="form-group col-lg-6">
-                    {{ form.expires.label(class='form-control-label')}}
-                    {% if form.expires.errors %}
-                    {{ form.expires(class="form-control form-control-sm is-invalid col-lg-12 col-sm-12")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.expires.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.expires(class="form-control form-control-sm col-lg-12 col-sm-12")}}
-                    {% endif %}
-                </div>
+        {{ form.expires.label(class='form-control-label')}}
+        {% if form.expires.errors %}
+        {{ form.expires(class="form-control form-control-sm is-invalid col-lg-12 col-sm-12")}}
+        <div class="invalid-feedback">
+            {% for error in form.expires.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ form.expires(class="form-control form-control-sm col-lg-12 col-sm-12")}}
+        {% endif %}
+    </div>
 
     <div class="form-group col-lg-6">
         {{ form.active.label(class='form-control-label')}}
