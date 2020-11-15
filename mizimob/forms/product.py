@@ -8,8 +8,8 @@ from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationE
 from mizimob.models.models import User, Product, Category, CategorySchema
 
 categories_schema = CategorySchema(many=True)
-# categories_ = list()
-categories_ = Category.query.all()
+categories_ = list()
+# categories_ = Category.query.all()
 categories = [(x.name).lower().capitalize() for x in categories_]
 
 

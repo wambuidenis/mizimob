@@ -28,8 +28,8 @@ images_schema = MediaSchema(many=True)
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
-# categories = list()
-categories = Category.query.all()
+categories = list()
+# categories = Category.query.all()
 
 back_mapper = dict()
 front_mapper = dict()
@@ -331,8 +331,8 @@ def seeder():
 @app.route("/admin/product/add", methods=['POST', "GET"])
 def add():
     form = ProductForm()
-    categories = Category.query.all()
-    categories = categories_schema.dump(categories)
+    categories_ = Category.query.all()
+    categories_ = categories_schema.dump(categories_)
     # update_mapper
     mapper()
     if request.method == "POST":
@@ -372,7 +372,7 @@ def add():
             flash("form data submitted is valid", "success")
     else:
         flash("Error with the form", "warning")
-    return render_template("add.html", form=form, categories=categories)
+    return render_template("add.html", form=form, categories=categories_)
 
 
 @app.route("/admin/orders/manage", methods=['POST', "GET"])
