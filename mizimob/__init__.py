@@ -12,7 +12,6 @@ load_dotenv()
 
 db_pass = os.getenv('DBPASS')
 db_user = os.getenv('DBUSER')
-print(db_pass, db_user)
 
 app = Flask(__name__)
 
