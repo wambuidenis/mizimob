@@ -359,7 +359,7 @@ def add():
             db.session.add(lookup)
             db.session.commit()
 
-            product schema data
+            # product schema data
             data = product_schema.dump(lookup)
             files = form.media.data
             filenames = []
