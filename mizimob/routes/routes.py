@@ -30,6 +30,7 @@ orders_schema = OrderSchema(many=True)
 
 categories = list()
 # categories = Category.query.all()
+
 back_mapper = dict()
 front_mapper = dict()
 
