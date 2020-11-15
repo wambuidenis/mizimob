@@ -3,7 +3,7 @@
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 99%;
+    height: 100%;
     left: 0;
     top: 0;
     margin-top:0px;
@@ -72,6 +72,19 @@ nav a.prev {
     nav a {
         top : auto;
         bottom : 3rem;
+    }
+
+    .rgbKineticSlider {
+    display: block;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 90%;
+        left: 0;
+        top: 0;
+        margin-top:0px;
+        opacity: 1;
+        transform-origin: 50% 50%;
     }
 
 
