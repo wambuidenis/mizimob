@@ -70,7 +70,7 @@ class ProductForm(FlaskForm):
     media = MultipleFileField("Images/Videos", validators=[DataRequired(), FileAllowed(["jpg", "png", "mp4", "mkv"])])
     description = TextAreaField("Description", validators=[DataRequired()])
     expires = StringField("When Post Expires", validators=[DataRequired()])
-    # active = RadioField("Active", choices=["Active", "Not Active"])
+    active = RadioField("Active", choices=[(status, status) for status in ["Active", "Not Active"]])
     submit = SubmitField("Save The product")
 
     # validate password
