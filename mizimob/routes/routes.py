@@ -341,23 +341,23 @@ def add():
         price = form.price.data
         description = form.description.data
         expires = form.expires.data
-        active = True if form.active.data == "Active" else False
+        active = True
         print(title, description, category, price, expires, active)
         print("level 2")
         if form.validate_on_submit():
             print("level 3")
             print("form is valid")
-            title = form.title.data
-            category = int(back_mapper[form.category.data])
-            price = form.price.data
-            description = form.description.data
-            expires = form.expires.data
-            active = True if form.active.data == "Active" else False
-            print(title, description, category, price, expires, active)
-            # data
-            lookup = Product(title, description, category, price, expires, active)
-            db.session.add(lookup)
-            db.session.commit()
+            # title = form.title.data
+            # category = int(back_mapper[form.category.data])
+            # price = form.price.data
+            # description = form.description.data
+            # expires = form.expires.data
+            # active = True if form.active.data == "Active" else False
+            # print(title, description, category, price, expires, active)
+            # # data
+            # lookup = Product(title, description, category, price, expires, active)
+            # db.session.add(lookup)
+            # db.session.commit()
 
             # product schema data
             # data = product_schema.dump(lookup)
@@ -380,7 +380,7 @@ def add():
             #     db.session.add(lookup)
             #     db.session.commit()
 
-        flash("form data submitted is valid", "success")
+            flash("form data submitted is valid", "success")
     else:
         flash("Error with the form", "warning")
     return render_template("add.html", form=form, categories=categories)

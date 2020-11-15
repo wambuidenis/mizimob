@@ -65,12 +65,12 @@ class ResetPassword(FlaskForm):
 
 class ProductForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    category = SelectField("Category", validators=[DataRequired()], choices=categories)
+    category = SelectField("Category", validators=[DataRequired()], choices= [(status, status) for status in categories])
     price = StringField("Price", validators=[DataRequired()])
     media = MultipleFileField("Images/Videos", validators=[DataRequired(), FileAllowed(["jpg", "png", "mp4", "mkv"])])
     description = TextAreaField("Description", validators=[DataRequired()])
     expires = StringField("When Post Expires", validators=[DataRequired()])
-    active = RadioField("Active", choices=["Active", "Not Active"])
+    # active = RadioField("Active", choices=["Active", "Not Active"])
     submit = SubmitField("Save The product")
 
     # validate password
