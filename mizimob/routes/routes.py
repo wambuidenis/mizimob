@@ -360,15 +360,17 @@ def add():
                 # cropping the image
                 file.save(path)
 
+                # added the database
+                lookup = Media(data['id'], file.filename)
+                db.session.add(lookup)
+                db.session.commit()
+
                 # cropping the image
                 im = Image.open(path)
                 image = crop_max_square(im)
                 image.save(path, quality=100)
 
-                # added the database
-                lookup = Media(data['id'], file.filename)
-                db.session.add(lookup)
-                db.session.commit()
+
 
             flash("form data submitted is valid", "success")
     else:
