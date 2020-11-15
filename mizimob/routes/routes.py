@@ -344,6 +344,7 @@ def add():
         active = True if form.active.data == "Active" else False
         print(title, description, category, price, expires, active)
         if form.validate_on_submit():
+            print("form is valid")
             title = form.title.data
             category = int(back_mapper[form.category.data])
             price = form.price.data
@@ -357,25 +358,25 @@ def add():
             db.session.commit()
 
             # product schema data
-            data = product_schema.dump(lookup)
-            files = form.media.data
-            filenames = []
-            for file in files:
-                filenames.append(file.filename)
-                path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
-
-                # cropping the image
-                file.save(path)
-
-                # cropping the image
-                im = Image.open(path)
-                image = crop_max_square(im)
-                image.save(path, quality=100)
-
-                # added the database
-                lookup = Media(data['id'], file.filename)
-                db.session.add(lookup)
-                db.session.commit()
+            # data = product_schema.dump(lookup)
+            # files = form.media.data
+            # filenames = []
+            # for file in files:
+            #     filenames.append(file.filename)
+            #     path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
+            #
+            #     # cropping the image
+            #     file.save(path)
+            #
+            #     # cropping the image
+            #     im = Image.open(path)
+            #     image = crop_max_square(im)
+            #     image.save(path, quality=100)
+            #
+            #     # added the database
+            #     lookup = Media(data['id'], file.filename)
+            #     db.session.add(lookup)
+            #     db.session.commit()
 
         flash("form data submitted is valid", "success")
     else:
