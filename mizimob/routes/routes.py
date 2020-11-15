@@ -341,7 +341,7 @@ def add():
         price = form.price.data
         description = form.description.data
         expires = form.expires.data
-        active = True
+        active = True if form.active.data == "Active" else False
         print(title, description, category, price, expires, active)
         print("level 2")
         if form.validate_on_submit():
