@@ -28,8 +28,8 @@ images_schema = MediaSchema(many=True)
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
-# categories = list()
-categories = Category.query.all()
+categories = list()
+# categories = Category.query.all()
 
 back_mapper = dict()
 front_mapper = dict()
