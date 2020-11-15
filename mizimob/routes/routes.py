@@ -355,10 +355,7 @@ def add():
             filenames = []
             for file in files:
                 filenames.append(file.filename)
-
-                path = os.path.join("/","root","mizimob","mizimob", "static", "uploads", file.filename)
-                print(">>>>>>>>>>>", path)
-                # cropping the image
+                path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
                 file.save(path)
 
                 # added the database
@@ -366,10 +363,10 @@ def add():
                 db.session.add(lookup)
                 db.session.commit()
 
-                # cropping the image
-                im = Image.open(path)
-                image = crop_max_square(im)
-                image.save(path, quality=100)
+                # # cropping the image
+                # im = Image.open(path)
+                # image = crop_max_square(im)
+                # image.save(path, quality=100)
             flash("form data submitted is valid", "success")
     else:
         flash("Error with the form", "warning")
