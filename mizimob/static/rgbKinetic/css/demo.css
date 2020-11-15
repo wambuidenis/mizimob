@@ -75,11 +75,11 @@ nav a.prev {
     }
 
     .rgbKineticSlider {
-    display: block;
+        display: block;
         position: relative;
         overflow: hidden;
         width: 100%;
-        height: 90%;
+        height: 100%;
         left: 0;
         top: 0;
         margin-top:0px;
@@ -87,6 +87,12 @@ nav a.prev {
         transform-origin: 50% 50%;
     }
 
+    .frame__title{
+        font-size:28px;
+    }
+    .frame__links{
+        font-size:28px;
+    }
 
 }
 

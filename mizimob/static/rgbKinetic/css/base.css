@@ -230,3 +230,19 @@ a:focus {
 	height: 100vh;
 	justify-content: center;
 }
+
+@media screen and (max-width: 53em) {
+
+    nav a {
+        top : auto;
+        bottom : 3rem;
+    }
+
+    .frame__title{
+        font-size:28px;
+    }
+    .cart{
+        font-size:28px;
+    }
+
+}
