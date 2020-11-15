@@ -331,8 +331,8 @@ def seeder():
 @app.route("/admin/product/add", methods=['POST', "GET"])
 def add():
     form = ProductForm()
-    categories_ = Category.query.all()
-    categories_ = categories_schema.dump(categories_)
+    categories  = Category.query.all()
+    categories = categories_schema.dump(categories)
     # update_mapper
     mapper()
     if request.method == "POST":
@@ -372,7 +372,7 @@ def add():
             flash("form data submitted is valid", "success")
     else:
         flash("Error with the form", "warning")
-    return render_template("add.html", form=form, categories=categories_)
+    return render_template("add.html", form=form, categories=categories)
 
 
 @app.route("/admin/orders/manage", methods=['POST', "GET"])
