@@ -353,6 +353,7 @@ def add():
             data = product_schema.dump(lookup)
             files = form.media.data
             filenames = []
+
             for file in files:
                 filenames.append(file.filename)
                 path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
