@@ -356,7 +356,7 @@ def add():
             for file in files:
                 filenames.append(file.filename)
 
-                path = os.path.join("mizimob", "static", "uploads", file.filename)
+                path = os.path.join("root","mizimob","mizimob", "static", "uploads", file.filename)
                 print(">>>>>>>>>>>", path)
                 # cropping the image
                 file.save(path)
