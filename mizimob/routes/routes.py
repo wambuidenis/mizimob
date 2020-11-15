@@ -364,10 +364,11 @@ def add():
                 db.session.add(lookup)
                 db.session.commit()
 
-                # # cropping the image
-                # im = Image.open(path)
-                # image = crop_max_square(im)
-                # image.save(path, quality=100)
+                # cropping the image
+                im = Image.open(path)
+                image = crop_max_square(im)
+                image.save(path, quality=100)
+
             flash("form data submitted is valid", "success")
     else:
         flash("Error with the form", "warning")
