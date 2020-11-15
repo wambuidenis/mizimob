@@ -237,8 +237,10 @@
 			let handle = $("#next")
 			handle.trigger("click")
 			handle.trigger("mouseenter")
-            $("html, body").animate({scrollTop: 100});
 		},5000)
+        setTimeout(()=>{
+            $("html, body").animate({scrollTop: 100});
+        },6000)
 
 		</script>
 
