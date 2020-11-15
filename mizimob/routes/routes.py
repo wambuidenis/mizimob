@@ -342,7 +342,7 @@ def add():
             description = form.description.data
             expires = form.expires.data
             active = True if form.active.data == "Active" else False
-
+            print(title, description, category, price, expires, active)
             # data
             lookup = Product(title, description, category, price, expires, active)
             db.session.add(lookup)
