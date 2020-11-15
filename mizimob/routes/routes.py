@@ -334,7 +334,7 @@ def add():
     categories = categories_schema.dump(categories)
     # update_mapper
     mapper()
-
+    print("level 1")
     if request.method == "POST":
         title = form.title.data
         category = int(back_mapper[form.category.data])
@@ -343,7 +343,9 @@ def add():
         expires = form.expires.data
         active = True if form.active.data == "Active" else False
         print(title, description, category, price, expires, active)
+        print("level 2")
         if form.validate_on_submit():
+            print("level 3")
             print("form is valid")
             title = form.title.data
             category = int(back_mapper[form.category.data])
