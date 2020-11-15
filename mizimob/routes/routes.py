@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash, send_from_directory
-from flask_login import login_user, current_user, login_required,logout_user
+from flask_login import login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
@@ -45,12 +45,12 @@ mapper()
 
 
 # serving some images
-@app.route("/img/map-9.jpg",methods=["GET"])
+@app.route("/img/map-9.jpg", methods=["GET"])
 def map_9():
     return send_from_directory("img", filename="map-9.jpg")
 
 
-@app.route("/img/displace-circle.png",methods=["GET"])
+@app.route("/img/displace-circle.png", methods=["GET"])
 def map_10():
     return send_from_directory("img", filename="displace-circle.png")
 
@@ -355,8 +355,9 @@ def add():
             filenames = []
             for file in files:
                 filenames.append(file.filename)
-                path = os.path.join(os.getcwd(), "mizimob", "static", "uploads", file.filename)
-                print(">>>>>>>>>>>",path)
+
+                path = os.path.join("mizimob", "static", "uploads", file.filename)
+                print(">>>>>>>>>>>", path)
                 # cropping the image
                 file.save(path)
 
@@ -369,9 +370,6 @@ def add():
                 im = Image.open(path)
                 image = crop_max_square(im)
                 image.save(path, quality=100)
-
-
-
             flash("form data submitted is valid", "success")
     else:
         flash("Error with the form", "warning")
@@ -413,7 +411,7 @@ def order():
     return render_template("manage_order.html", products=new_products, orders=orders_lookup)
 
 
-@app.route("/logout",methods=["POST","GET"])
+@app.route("/logout", methods=["POST", "GET"])
 def logout():
     logout_user()
     return redirect(url_for("login"))
