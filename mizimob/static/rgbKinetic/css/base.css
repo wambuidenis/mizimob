@@ -219,9 +219,9 @@ a:focus {
 	padding: 0;
 	justify-self: end;
 }
-.cart{
-	margin-top:5px;
-}
+/*.cart{*/
+/*	!*margin-top:5px;*!*/
+/*}*/
 
 .frame a {
 	pointer-events: auto;
