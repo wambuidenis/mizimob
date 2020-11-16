@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, send_from_directory
+from flask import render_template, request, redirect, url_for, flash, send_from_directory,redirect
 from flask_login import login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import sqlalchemy
 
@@ -300,8 +300,7 @@ def cart():
                 new.append(product)
                 new.append(image)
                 data.append(new)
-
-                return render_template("cart_posts.html", orders=data)
+                return render_template("cart_posts.html", orders=data,form=form_)
         else:
             flash("Please make Sure Form Data is Valid.", "error")
     else:
@@ -309,6 +308,7 @@ def cart():
         return render_template("cart.html", form=form_)
     #  orders=lookup_datarr
     return render_template("cart.html", form=form_)
+
 
 
 @app.route("/db/seed", methods=["POST"])
