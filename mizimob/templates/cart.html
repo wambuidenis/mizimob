@@ -63,6 +63,9 @@
       </div>
       <div class="site-section pt-0">
         <div class="container">
+        <h4 class="text-muted">My Cart</h4>
+            <hr>
+
           <div class="row align-items-stretch">
 
             <div class="col-md-4 mt-4" data-aos="fade-up">
@@ -76,7 +79,7 @@
                         {% endif %}
                     {% endwith %}
 
-                <h5 class="text-muted">Enter Phone or Email to get your orders.</h5>
+                <h6 class="text-muted">Enter Phone  Email to get your orders.</h6>
                 <div class="form-group ">
                     {{ form.email_phone.label(class='form-control-label')}}
                     {% if form.email_phone.errors %}
