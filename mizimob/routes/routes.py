@@ -291,7 +291,6 @@ def cart():
                 data_ = Order.query.filter_by(email=phone_email).all()
             else:
                 data_ = Order.query.filter_by(phone=phone_email).all()
-
             for item in data_:
                 new = list()
                 id = item.product_id
@@ -301,13 +300,15 @@ def cart():
                 new.append(product)
                 new.append(image)
                 data.append(new)
+
+                return render_template("cart_posts.html", orders=data)
         else:
             flash("Please make Sure Form Data is Valid.", "error")
     else:
         form_ = PhoneEmail()
         return render_template("cart.html", form=form_)
     #  orders=lookup_datarr
-    return render_template("cart.html", form=form_, orders=data)
+    return render_template("cart.html", form=form_)
 
 
 @app.route("/db/seed", methods=["POST"])

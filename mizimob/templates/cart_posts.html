@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -68,7 +72,7 @@
 
           <div class="row align-items-stretch">
 
-            <div class="col-md-6 mt-4" data-aos="fade-up">
+            <div class="col-md-4 mt-4" data-aos="fade-up">
                 <form action="{{ url_for('cart') }}" method="POST">
                     {{ form.hidden_tag() }}
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -78,32 +82,50 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-
-                <h6 class="text-muted">Enter Phone  Email to get your orders.</h6>
-                <div class="form-group ">
-                    {{ form.email_phone.label(class='form-control-label')}}
-                    {% if form.email_phone.errors %}
-                    {{ form.email_phone(class="form-control form-control-sm is-invalid col-lg-12 col-sm-12")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.email_phone.errors %}
-                        <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    {{ form.email_phone(class="form-control form-control-sm col-lg-12 col-sm-12")}}
-                    {% endif %}
-                </div>
-                    <div class="mt-5 mb-3">
-                         {{ form.submit(class="btn col-6 btn-sm btn-success btn-block mt-4")}}
+                <div class="mt-5 mb-3">
+                         {{ form.submit(class="btn col-lg-12 col-sm-12 btn-sm btn-success btn-block mt-4")}}
                     </div>
                 </form>
+            </div>
+            <div class="col-md-7 ml-auto" data-aos="fade-up" data-aos-delay="100">
+              <div class="sticky-content">
+                <h3 class="h3 mt-5 text-muted">Orders</h3>
+                  <hr>
+                  {% if orders %}
+                      {% for order in orders %}
+                        <div class="mb-5" id="content">
+                            <a href="{{ url_for('item_view',name=order[1].name) }}" target="_blank" >
+                                <div class="ml-2">{{ order[0].id }}.</div>
+                                <div class="col-6 ml-1">
+                                    <div class="row">
+                                        <h6>{{ order[1].name }}.</h6>
+                                    </div>
+                                    <div class="row ">
+                                        <h6 class="text-muted">{{ order[1].description }}</h6>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                     {% endfor %}
+                  {%  else %}
+                      <h4><i class="fas fa-exclamation-triangle"></i></h4>
+                      <h5>Error!</h5>
+                      <h6>There are no order by the details passed.</h6>
+                  {% endif %}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
   </main>
+
+
+
+
 {#end main#}
+<!--the head ...-->
 
  <!-- ======= Footer ======= -->
   <footer class="footer" role="contentinfo">
@@ -138,4 +160,9 @@
 
 </body>
 
+</html></title>
+</head>
+<body>
+
+</body>
 </html>
