@@ -1,9 +1,10 @@
-from flask import render_template, request, redirect, url_for, flash, send_from_directory,redirect
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, redirect
 from flask_login import login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
-from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm)
+from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm,
+                                   RegisterForm, Cart)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema)
 from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square
@@ -77,8 +78,13 @@ def home():
     return render_template("index.html", products=new_products, categories=categories)
 
 
-@app.route('/product/<string:name>')
-def item(name):
+@app.route('/product/<string:name>', methods=["GET","POST"])
+def product_item(name):
+    # form
+    form = Cart()
+    user_email = current_user.email
+    user_id = current_user.id
+
     #  we are going  to get the name from the database
     # get images and file fron the database and sho them here
     lookup = Product.query.filter_by(name=name).first()
@@ -92,10 +98,67 @@ def item(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = front_mapper[int(index)]
-    return render_template("work-single.html", product=lookup_data)
+
+    """
+         #  we need to add the actual form
+        form = OrderForm()
+
+        #  we are going  to get the name from the database
+        lookup = Product.query.filter_by(name=name).first()
+        media_lookup = Media.query.filter_by(product_id=lookup.id).all()
+        # media_data
+        lookup_data = product_schema.dump(lookup)
+        media_data = images_schema.dump(media_lookup)
+        images = list()
+        for media in media_data:
+            images.append(media['file'])
+
+        lookup_data["images"] = images
+        index = lookup_data["category"]
+        lookup_data["category"] = front_mapper[int(index)]
+
+        if request.method == "POST":
+            if form.validate_on_submit():
+                phone = form.phone.data
+                email = form.email.data
+                where = form.where.data
+                when = form.when.data
+                #     here we are going to send an email and also make a db entry
+                if validate_phone(phone):
+                    if validate_email(email):
+                        try:
+                            order = Order(lookup.id, where, when, email, phone)
+                            db.session.add(order)
+                            if db.session.commit():
+                                return render_template("request_item.html", product=lookup_data, form=form, booked=True)
+                            else:
+                                return render_template("request_item.html", product=lookup_data, form=form, booked=True)
+                            # here we are going to send an email
+                            # send_email(email,f"Order for the product {lookup.name} has been successfully made.",reset_body())
+                        except Exception as e:
+                            flash("Order not made. Please confirm data and try again", "error")
+                    else:
+                        flash("email not valid", "error")
+                else:
+                    flash("phone number is not valid", "error")
+
+            else:
+                flash("Please make sure all information is valid", "error")
+                return render_template("request_item.html", product=lookup_data, form=form, booked=False)
+        else:
+            return render_template("request_item.html", product=lookup_data, form=form, booked=False)
+        """
+
+    form = Cart()
+    if form.validate_on_submit():
+        flash("Item Successfully addded to cart", "success")
+        pass
+
+    return render_template("work-single.html", product=lookup_data, form=form)
 
 
 @app.route('/cart/view/<string:name>')
+@login_required
 def item_view(name):
     #  we are going  to get the name from the database
     # get images and file fron the database and sho them here
@@ -110,59 +173,8 @@ def item_view(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = front_mapper[int(index)]
+
     return render_template("cart_view.html", product=lookup_data)
-
-
-@app.route("/product/<string:name>/request", methods=['POST', "GET"])
-def more_info(name):
-    #  we need to add the actual form
-    form = OrderForm()
-
-    #  we are going  to get the name from the database
-    lookup = Product.query.filter_by(name=name).first()
-    media_lookup = Media.query.filter_by(product_id=lookup.id).all()
-    # media_data
-    lookup_data = product_schema.dump(lookup)
-    media_data = images_schema.dump(media_lookup)
-    images = list()
-    for media in media_data:
-        images.append(media['file'])
-
-    lookup_data["images"] = images
-    index = lookup_data["category"]
-    lookup_data["category"] = front_mapper[int(index)]
-
-    if request.method == "POST":
-        if form.validate_on_submit():
-            phone = form.phone.data
-            email = form.email.data
-            where = form.where.data
-            when = form.when.data
-            #     here we are going to send an email and also make a db entry
-            if validate_phone(phone):
-                if validate_email(email):
-                    try:
-                        order = Order(lookup.id, where, when, email, phone)
-                        db.session.add(order)
-                        if db.session.commit():
-                            return render_template("request_item.html", product=lookup_data, form=form, booked=True)
-                        else:
-                            return render_template("request_item.html", product=lookup_data, form=form, booked=True)
-                        # here we are going to send an email
-                        # send_email(email,f"Order for the product {lookup.name} has been successfully made.",reset_body())
-                    except Exception as e:
-                        flash("Order not made. Please confirm data and try again", "error")
-                else:
-                    flash("email not valid", "error")
-            else:
-                flash("phone number is not valid", "error")
-
-        else:
-            flash("Please make sure all information is valid", "error")
-            return render_template("request_item.html", product=lookup_data, form=form, booked=False)
-    else:
-        return render_template("request_item.html", product=lookup_data, form=form, booked=False)
-    return render_template("request_item.html", product=lookup_data, form=form, booked=False)
 
 
 @app.route("/admin/login", methods=["POST", 'GET'])
@@ -182,6 +194,60 @@ def login():
         else:
             flash("Login unsuccessful Please Check Email and Password", "danger ")
     return render_template("login.html", form=login)
+
+
+@app.route("/user/login", methods=["POST", 'GET'])
+def user_login():
+    if current_user.is_authenticated:
+        return redirect(url_for("products_all"))
+    # loading the form
+    login = LoginForm()
+    # checking the form data status
+    if login.validate_on_submit():
+        user = User.query.filter_by(email=login.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, login.password.data):
+            next_page = request.args.get("next")
+            login_user(user)
+            return redirect(next_page) if next_page else redirect(url_for('products_all'))
+        else:
+            flash("Login unsuccessful Please Check Email and Password", "danger ")
+    return render_template("login.html", form=login)
+
+
+@app.route("/user/signup", methods=["POST", 'GET'])
+def user_register():
+    # if current_user.is_authenticated:
+    #     return redirect(url_for("home"))
+
+    # loading the form
+    form = RegisterForm()
+    # get the deatil  from the form
+    firstname = form.firstname.data
+    lastname = form.lastname.data
+    email = form.email.data
+    phone = form.phone.data
+    password = form.password.data
+    confirm_password = form.confirm_password.data
+    print(firstname, lastname, phone, email, password, confirm_password)
+
+    # checking the form data status
+    if form.validate_on_submit():
+        if password == confirm_password:
+            # passwords match
+            hashed_password = bcrypt.generate_password_hash(password)
+            user = User(firstname, lastname, phone, email, hashed_password)
+            db.session.add(user)
+            db.session.commit()
+        else:
+            flash("Password do not match", "danger")
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            next_page = request.args.get("next")
+            login_user(user)
+            return redirect(next_page) if next_page else redirect(url_for('products_all'))
+        else:
+            flash("Login unsuccessful Please Check Email and Password", "danger")
+    return render_template("signup.html", form=form)
 
 
 @app.route("/admin/product/all")
@@ -281,34 +347,27 @@ def add_category():
 
 
 @app.route('/cart', methods=['POST', "GET"])
+@login_required
 def cart():
     form_ = PhoneEmail()
     data = list()
-    if request.method == "POST":
-        if form_.validate_on_submit():
-            phone_email = form_.email_phone.data
-            if validate_email(phone_email):
-                data_ = Order.query.filter_by(email=phone_email).all()
-            else:
-                data_ = Order.query.filter_by(phone=phone_email).all()
-            for item in data_:
-                new = list()
-                id = item.product_id
-                product = Product.query.get(id)
-                image = Media.query.filter_by(product_id=id).first()
-                new.append(item)
-                new.append(product)
-                new.append(image)
-                data.append(new)
-                return render_template("cart_posts.html", orders=data,form=form_)
-        else:
-            flash("Please make Sure Form Data is Valid.", "error")
+    user = current_user
+    if validate_email(current_user.email):
+        data_ = Order.query.filter_by(email=user.email).all()
     else:
-        form_ = PhoneEmail()
-        return render_template("cart.html", form=form_)
+        data_ = Order.query.filter_by(phone=user.email).all()
+    for item in data_:
+        new = list()
+        id = item.product_id
+        product = Product.query.get(id)
+        image = Media.query.filter_by(product_id=id).first()
+        new.append(item)
+        new.append(product)
+        new.append(image)
+        data.append(new)
+        print(data)
     #  orders=lookup_datarr
-    return render_template("cart.html", form=form_)
-
+    return render_template("cart_posts.html", orders=data)
 
 
 @app.route("/db/seed", methods=["POST"])
@@ -330,9 +389,10 @@ def seeder():
 
 
 @app.route("/admin/product/add", methods=['POST', "GET"])
+@login_required
 def add():
     form = ProductForm()
-    categories  = Category.query.all()
+    categories = Category.query.all()
     categories = categories_schema.dump(categories)
     # update_mapper
     mapper()
@@ -377,6 +437,7 @@ def add():
 
 
 @app.route("/admin/orders/manage", methods=['POST', "GET"])
+@login_required
 def order():
     # getting all the orders
     orders_lookup = Order.query.all()
@@ -415,3 +476,8 @@ def order():
 def logout():
     logout_user()
     return redirect(url_for("login"))
+
+
+@app.route("/test")
+def test_():
+    return render_template("test.html")

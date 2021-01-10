@@ -42,7 +42,6 @@
           <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" height="70" ®alt="Mizimob">
       </a>
 
-
     </div>
   </nav>
 
@@ -67,7 +66,6 @@
             <hr>
 
           <div class="row align-items-stretch">
-
             <div class="col-md-4 mt-4" data-aos="fade-up">
                 <form action="{{ url_for('cart') }}" method="POST">
                     {{ form.hidden_tag() }}
@@ -83,14 +81,14 @@
                 <div class="form-group ">
                     {{ form.email_phone.label(class='form-control-label')}}
                     {% if form.email_phone.errors %}
-                    {{ form.email_phone(class="form-control form-control-sm is-invalid col-lg-12 col-sm-12")}}
+                    {{ form.email_phone(class="form-control form-control-sm is-invalid col-6 col-sm-12")}}
                     <div class="invalid-feedback">
                         {% for error in form.email_phone.errors %}
                         <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                     {% else %}
-                    {{ form.email_phone(class="form-control form-control-sm col-lg-12 col-sm-12")}}
+                    {{ form.email_phone(class="form-control form-control-sm col-6 col-sm-12")}}
                     {% endif %}
                 </div>
                     <div class="mt-5 mb-3">

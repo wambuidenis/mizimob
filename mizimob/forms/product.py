@@ -14,20 +14,14 @@ categories = [(x.name).lower().capitalize() for x in categories_]
 
 
 class RegisterForm(FlaskForm):
-    firstaname = StringField("Firstname", validators=[DataRequired()])
+    firstname = StringField("Firstname", validators=[DataRequired()])
     lastname = StringField("Lastname", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), Email()])
+    phone = StringField("Phone Number", validators=[DataRequired()])
     password = PasswordField("Password",
                              validators=[DataRequired(), EqualTo('confirm_password', message='Passwords must match')])
     confirm_password = PasswordField("Confirm Password")
     submit = SubmitField("Register")
-
-    # validation  for checking if the username
-    @staticmethod
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user:
-            raise ValidationError("Username Already Taken. Please Choose Another One")
 
     # validation from checking the email
     @staticmethod
@@ -35,6 +29,12 @@ class RegisterForm(FlaskForm):
         email = User.query.filter_by(email=email.data).first()
         if email:
             raise ValidationError("Email Already Taken. Please Choose Another One")
+
+    @staticmethod
+    def validate_phone(self, phone):
+        phone_length = len((phone.data)) >= 10
+        if phone and not phone_length:
+            raise ValidationError("Phone number not valid. Please enter a valid phone number.")
 
 
 class LoginForm(FlaskForm):
@@ -65,7 +65,7 @@ class ResetPassword(FlaskForm):
 
 class ProductForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    category = SelectField("Category", validators=[DataRequired()], choices= [(status, status) for status in categories])
+    category = SelectField("Category", validators=[DataRequired()], choices=[(status, status) for status in categories])
     price = StringField("Price", validators=[DataRequired()])
     media = MultipleFileField("Images/Videos", validators=[DataRequired(), FileAllowed(["jpg", "png", "mp4", "mkv"])])
     description = TextAreaField("Description", validators=[DataRequired()])
@@ -103,3 +103,7 @@ class OrderForm(FlaskForm):
 class PhoneEmail(FlaskForm):
     email_phone = StringField("Email/Phone", validators=[DataRequired()])
     submit = SubmitField("Get Orders")
+
+
+class Cart(FlaskForm):
+    submit = SubmitField("Add To Cart")

@@ -6,6 +6,17 @@
         <div class="row align-items-center">
           <div class="col-md-6" data-aos="fade-up">
             <h5>{{ product['name'] }}</h5>
+              <br>
+
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                        {% for category,message in messages %}
+                        <div class="alert alert-{{ category }}">{{message}}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+
           </div>
         </div>
       </div>
@@ -25,9 +36,12 @@
                       {{ product['description'] }}
                   </p>
                 </div>
-                    <a href="{{ url_for('more_info',name=product['name']) }}" class="btn btn-outline-primary btn-sm
-                    col-6
-">Make A Booking</a>
+                  <form action="{{ url_for('product_item',name=product["name"]) }}" method='POST'>
+                    {{ form.hidden_tag() }}
+                        <div class="mt-5 mb-3">
+                             {{ form.submit(class="btn col-lg-3 col-md-6 col-sm-12 btn-sm btn-info btn-block mt-4")}}
+                        </div>
+                    </form>
                 </p>
               </div>
             </div>

@@ -3,7 +3,6 @@ from mizimob import db, ma, login_manager
 from datetime import datetime
 
 
-
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
@@ -17,7 +16,6 @@ class CategorySchema(ma.Schema):
         fields = ("id", "name")
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -28,13 +26,13 @@ def load_user(user_id):
 # it will add certain fileds to the user class tha are essential to the user login
 
 
-
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(100), unique=True, nullable=False)
     lastname = db.Column(db.String(100), unique=True, nullable=False)
     phone = db.Column(db.String(100), unique=True)
     email = db.Column(db.String(48), unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
     image_file = db.Column(db.String(20), nullable=False, default="default.jpg")
     password = db.Column(db.String(60), nullable=False)
 
@@ -79,7 +77,7 @@ class Product(db.Model):
 
 class ProductSchema(ma.Schema):
     class Meta:
-        fields = ("id", "name", "category", "price", "media", "expires", "date_added", "active","description")
+        fields = ("id", "name", "category", "price", "media", "expires", "date_added", "active", "description")
 
 
 class Media(db.Model):
@@ -106,7 +104,7 @@ class Order(db.Model):
     when = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, product_id, location,when, email, phone):
+    def __init__(self, product_id, location, when, email, phone):
         self.product_id = product_id
         self.location = location
         self.when = when
@@ -116,7 +114,20 @@ class Order(db.Model):
 
 class OrderSchema(ma.Schema):
     class Meta:
-        fields = ("id", "product_id", "location","when", "email", "phone", "date_added")
+        fields = ("id", "product_id", "location", "when", "email", "phone", "date_added")
 
 
+class Cart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.ForeignKey('product.id'), nullable=True)
+    user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
+    date_added = db.Column(db.DateTime, default=datetime.now)
 
+    def __init__(self, product_id, user_id):
+        self.product_id = product_id
+        self.user_id = user_id
+
+
+class CartSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "product_id", "user_id")
