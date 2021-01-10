@@ -98,18 +98,14 @@ class MediaSchema(ma.Schema):
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.ForeignKey('product.id'), nullable=True)
-    location = db.Column(db.Text, nullable=False)
-    email = db.Column(db.String(255), nullable=True)
-    phone = db.Column(db.String(255), nullable=True)
+    user_id = db.Column(db.ForeignKey('user.id'), nullable=True)
     when = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, product_id, location, when, email, phone):
+    def __init__(self, product_id, when, email):
         self.product_id = product_id
-        self.location = location
         self.when = when
         self.email = email
-        self.phone = phone
 
 
 class OrderSchema(ma.Schema):
