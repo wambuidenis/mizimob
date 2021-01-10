@@ -105,5 +105,5 @@ class PhoneEmail(FlaskForm):
     submit = SubmitField("Get Orders")
 
 
-class Cart(FlaskForm):
+class CartForm(FlaskForm):
     submit = SubmitField("Add To Cart")

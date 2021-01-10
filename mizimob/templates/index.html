@@ -36,7 +36,7 @@
 
              {% for product in products %}
                   <div class="item {{ product["category"] }} col-sm-6 col-md-4 col-lg-4 mb-4">
-                    <a href="{{ url_for('item',name=product["name"]) }}" class="item-wrap fancybox">
+                    <a href="{{ url_for('product_item',name=product["name"]) }}" class="item-wrap fancybox">
                       <div class="work-info">
                         <h3>{{ product["name"] }}</h3>
                         <span>{{ product["category"] }}</span>

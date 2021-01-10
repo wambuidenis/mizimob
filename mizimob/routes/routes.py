@@ -4,12 +4,13 @@ from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
 from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm,
-                                   RegisterForm, Cart)
+                                   RegisterForm, CartForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema,Cart, CartSchema)
 from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square
 import os
 from PIL import Image
+import time
 
 # ---------------------------------
 # ------- SETTING GLOBAL VARS -----
@@ -81,16 +82,16 @@ def home():
 @app.route('/product/<string:name>', methods=["GET","POST"])
 def product_item(name):
     # form
-    form = Cart()
+    form = CartForm()
     user_email = current_user.email
     user_id = current_user.id
 
     #  we are going  to get the name from the database
     # get images and file fron the database and sho them here
-    lookup = Product.query.filter_by(name=name).first()
-    media_lookup = Media.query.filter_by(product_id=lookup.id).all()
+    product = Product.query.filter_by(name=name).first()
+    media_lookup = Media.query.filter_by(product_id=product.id).all()
     # media_data
-    lookup_data = product_schema.dump(lookup)
+    lookup_data = product_schema.dump(product)
     media_data = images_schema.dump(media_lookup)
     images = list()
     for media in media_data:
@@ -149,10 +150,18 @@ def product_item(name):
             return render_template("request_item.html", product=lookup_data, form=form, booked=False)
         """
 
-    form = Cart()
     if form.validate_on_submit():
-        flash("Item Successfully addded to cart", "success")
-        pass
+        product = Product.query.filter_by(name=name).first()
+        print(product)
+        lookup = Cart(product.id, user_id)
+        db.session.add(lookup)
+        db.session.commit()
+        flash("Item Added to cart Successfully","success")
+        # time.sleep(5)
+        return redirect("cart")
+    else:
+        flash("Item Could be added to the cart","Error")
+
 
     return render_template("work-single.html", product=lookup_data, form=form)
 
@@ -349,13 +358,9 @@ def add_category():
 @app.route('/cart', methods=['POST', "GET"])
 @login_required
 def cart():
-    form_ = PhoneEmail()
     data = list()
     user = current_user
-    if validate_email(current_user.email):
-        data_ = Order.query.filter_by(email=user.email).all()
-    else:
-        data_ = Order.query.filter_by(phone=user.email).all()
+    data_ = Order.query.filter_by(user_id=user.id).all()
     for item in data_:
         new = list()
         id = item.product_id
