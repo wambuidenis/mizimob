@@ -6,7 +6,7 @@ from mizimob import app, bcrypt, db
 from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm,
                                    RegisterForm, Cart)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
-                                   ProductSchema, Order, OrderSchema)
+                                   ProductSchema, Order, OrderSchema,Cart, CartSchema)
 from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square
 import os
 from PIL import Image
