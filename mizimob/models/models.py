@@ -102,10 +102,10 @@ class Order(db.Model):
     when = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, product_id, when, email):
+    def __init__(self, product_id, user_id, when):
         self.product_id = product_id
         self.when = when
-        self.email = email
+        self.user_id = user_id
 
 
 class OrderSchema(ma.Schema):
