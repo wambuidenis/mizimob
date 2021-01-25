@@ -6,7 +6,7 @@ from mizimob import app, bcrypt, db
 from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm,
                                    RegisterForm, CartForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
-                                   ProductSchema, Order, OrderSchema,Cart, CartSchema)
+                                   ProductSchema, Order, OrderSchema, Cart, CartSchema)
 from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square
 import os
 from PIL import Image
@@ -79,12 +79,10 @@ def home():
     return render_template("index.html", products=new_products, categories=categories)
 
 
-@app.route('/product/<string:name>', methods=["GET","POST"])
+@app.route('/product/<string:name>', methods=["GET", "POST"])
 def product_item(name):
     # form
     form = CartForm()
-    user_email = current_user.email
-    user_id = current_user.id
 
     #  we are going  to get the name from the database
     # get images and file fron the database and sho them here
@@ -99,70 +97,23 @@ def product_item(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = front_mapper[int(index)]
-
-    """
-         #  we need to add the actual form
-        form = OrderForm()
-
-        #  we are going  to get the name from the database
-        lookup = Product.query.filter_by(name=name).first()
-        media_lookup = Media.query.filter_by(product_id=lookup.id).all()
-        # media_data
-        lookup_data = product_schema.dump(lookup)
-        media_data = images_schema.dump(media_lookup)
-        images = list()
-        for media in media_data:
-            images.append(media['file'])
-
-        lookup_data["images"] = images
-        index = lookup_data["category"]
-        lookup_data["category"] = front_mapper[int(index)]
-
-        if request.method == "POST":
-            if form.validate_on_submit():
-                phone = form.phone.data
-                email = form.email.data
-                where = form.where.data
-                when = form.when.data
-                #     here we are going to send an email and also make a db entry
-                if validate_phone(phone):
-                    if validate_email(email):
-                        try:
-                            order = Order(lookup.id, where, when, email, phone)
-                            db.session.add(order)
-                            if db.session.commit():
-                                return render_template("request_item.html", product=lookup_data, form=form, booked=True)
-                            else:
-                                return render_template("request_item.html", product=lookup_data, form=form, booked=True)
-                            # here we are going to send an email
-                            # send_email(email,f"Order for the product {lookup.name} has been successfully made.",reset_body())
-                        except Exception as e:
-                            flash("Order not made. Please confirm data and try again", "error")
-                    else:
-                        flash("email not valid", "error")
-                else:
-                    flash("phone number is not valid", "error")
-
-            else:
-                flash("Please make sure all information is valid", "error")
-                return render_template("request_item.html", product=lookup_data, form=form, booked=False)
-        else:
-            return render_template("request_item.html", product=lookup_data, form=form, booked=False)
-        """
-
     if form.validate_on_submit():
-        product = Product.query.filter_by(name=name).first()
-        print(product)
-        lookup = Cart(product.id, user_id)
-        db.session.add(lookup)
-        db.session.commit()
-        flash("Item Added to cart Successfully","success")
-        # time.sleep(5)
-        return redirect("cart")
+        # user logged in <<DATA>>
+        try:
+            user_id = current_user.id
+            product = Product.query.filter_by(name=name).first()
+            lookup = Cart(product.id, user_id)
+            db.session.add(lookup)
+            db.session.commit()
+
+            flash("Item Added to cart Successfully", "success")
+            time.sleep(2)
+            return redirect(url_for("cart"))
+        except AttributeError:
+            # require login
+            return redirect(url_for("user_login", next="product_item", name=name))
     else:
-        flash("Item Could be added to the cart","Error")
-
-
+        flash("Item Could be added to the cart", "Error")
     return render_template("work-single.html", product=lookup_data, form=form)
 
 
@@ -198,6 +149,7 @@ def login():
         user = User.query.filter_by(email=login.email.data).first()
         if user and bcrypt.check_password_hash(user.password, login.password.data):
             next_page = request.args.get("next")
+            print("???????? NEXT PAGE", next_page)
             login_user(user)
             return redirect(next_page) if next_page else redirect(url_for('products_all'))
         else:
@@ -209,6 +161,7 @@ def login():
 def user_login():
     if current_user.is_authenticated:
         return redirect(url_for("products_all"))
+
     # loading the form
     login = LoginForm()
     # checking the form data status
@@ -360,7 +313,7 @@ def add_category():
 def cart():
     data = list()
     user = current_user
-    data_ = Order.query.filter_by(user_id=user.id).all()
+    data_ = Cart.query.filter_by(user_id=user.id).all()
     for item in data_:
         new = list()
         id = item.product_id
@@ -370,8 +323,8 @@ def cart():
         new.append(product)
         new.append(image)
         data.append(new)
-        print(data)
     #  orders=lookup_datarr
+    print(data)
     return render_template("cart_posts.html", orders=data)
 
 
@@ -486,3 +439,5 @@ def logout():
 @app.route("/test")
 def test_():
     return render_template("test.html")
+
+

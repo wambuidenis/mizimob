@@ -528,3 +528,7 @@ body{
 .order_item{
   border: 1px solid black;
 }
+
+.img-fluid-2{
+  width:50px;
+}

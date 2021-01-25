@@ -39,7 +39,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User (' {self.id}', '{self.email}', '{self.image_file}' )"
 
-    def __init__(self, firstname, lastname, phone, email, password):
+    def __init__(self, firstname, lastname, phone, email, password,is_admin):
         self.firstname = firstname
         self.lastname = lastname
         self.phone = phone
@@ -52,7 +52,7 @@ class User(db.Model, UserMixin):
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ("id", "firstname", "lastname", "phone", "email", "password")
+        fields = ("id", "firstname", "lastname", "phone", "email", "password","is_admin")
 
 
 # creating a company class
