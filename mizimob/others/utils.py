@@ -244,3 +244,6 @@ def crop_max_square(pil_img):
 
 def is_admin(user):
     return user.is_admin
+
+
+

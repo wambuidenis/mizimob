@@ -7,7 +7,7 @@ from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEm
                                    RegisterForm, CartForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema, Cart, CartSchema)
-from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square
+from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square,is_admin
 import os
 from PIL import Image
 import time
@@ -215,6 +215,7 @@ def user_register():
 @app.route("/admin/product/all")
 @login_required
 def products_all():
+
     # get products from the database
     products = Product.query.all()
     product_dict = products_schema.dump(products)
@@ -325,7 +326,29 @@ def cart():
         data.append(new)
     #  orders=lookup_datarr
     print(data)
-    return render_template("cart_posts.html", orders=data)
+    return render_template("cart_posts.html", orders=data, user=current_user)
+
+
+@app.route("/checkout", methods=["GET","POST"])
+@login_required
+def checkout():
+    data = list()
+    user = current_user
+    data_ = Cart.query.filter_by(user_id=user.id).all()
+    for item in data_:
+        new = list()
+        id = item.product_id
+        product = Product.query.get(id)
+        image = Media.query.filter_by(product_id=id).first()
+        new.append(item)
+        new.append(product)
+        new.append(image)
+        data.append(new)
+    #  orders=lookup_datarr
+    print(data)
+    return render_template("cart_posts.html", orders=data,user=current_user)
+
+
 
 
 @app.route("/db/seed", methods=["POST"])
@@ -397,6 +420,7 @@ def add():
 @app.route("/admin/orders/manage", methods=['POST', "GET"])
 @login_required
 def order():
+    authorized(current_user,"add")
     # getting all the orders
     orders_lookup = Order.query.all()
     orders_data = orders_schema.dump(orders_lookup)
@@ -441,3 +465,6 @@ def test_():
     return render_template("test.html")
 
 
+def authorized(user,redirect_to):
+    if not is_admin(user):
+        return redirect(url_for(redirect_to))

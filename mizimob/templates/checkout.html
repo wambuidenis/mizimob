@@ -73,14 +73,18 @@
                   {% if orders %}
                       {% for order in orders %}
                         <div class="col-12 row mt-2">
-                            <div class="col-2">
+                            <div class="col-1">
                                 <h6 class="col-1">{{ order[0].id }}.</h6>
                             </div>
                             <div class="col-2">
                                 <img class="img-fluid-2" width="50px" src="{{ url_for('static',filename='uploads/'+order[2].file )}}">
                             </div>
-                            <div class="col-5">{{ order[1].name }}.</div>
-                            <div class="col-3"><a href="{{ url_for('item_view',name=order[1].name) }}" >More Info</a>
+                            <div class="col-4">{{ order[1].name }}.</div>
+                            <div class="col-2"><a href="{{ url_for('item_view',name=order[1].name) }}" >More Info</a>
+                            </div>
+                            <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}" >Remove</a>
+                            </div>
+                        <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}" >+</a>
                             </div>
                         </div>
                      {% endfor %}
