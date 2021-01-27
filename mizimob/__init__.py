@@ -5,6 +5,8 @@ from flask_mail import Mail
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_session import Session
+
 import os
 from dotenv import load_dotenv
 
@@ -26,6 +28,11 @@ try:
     db = SQLAlchemy(app)
     #  adding migrationt support
     migrate = Migrate(app, db)
+
+    # setting session
+    SESSION_TYPE = 'sqlalchemy'
+    app.config.from_object(__name__)
+    Session(app)
 
 except sqlalchemy.exc.ProgrammingError as e:
     print("error", e)

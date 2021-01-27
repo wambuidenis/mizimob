@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, send_from_directory, redirect
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, redirect,session
 from flask_login import login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import sqlalchemy
 
@@ -12,6 +12,7 @@ import os
 from PIL import Image
 import time
 from dateutil import parser
+
 
 # ---------------------------------
 # ------- SETTING GLOBAL VARS -----
@@ -45,6 +46,8 @@ def mapper():
 
 
 mapper()
+
+session["key"]  = "denis kiruku wambui"
 
 
 # serving some images
@@ -370,8 +373,6 @@ def order_confirmed():
         new.append(product)
         new.append(image)
         data.append(new)
-    #  orders=lookup_datarr
-    print(data)
     return render_template("checkout.html", orders=data, user=current_user)
 
 
