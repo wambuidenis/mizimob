@@ -355,7 +355,7 @@ def checkout():
     return render_template("checkout.html", orders=data, user=current_user)
 
 
-@app.route("/order/confirmed", methods=["GET", "POST"])
+@app.route("/confirm/order", methods=["GET", "POST"])
 @login_required
 def order_confirmed():
     data = list()
