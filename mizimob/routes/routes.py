@@ -7,10 +7,11 @@ from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEm
                                    RegisterForm, CartForm)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema, Cart, CartSchema)
-from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square,is_admin
+from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square, is_admin
 import os
 from PIL import Image
 import time
+from dateutil import parser
 
 # ---------------------------------
 # ------- SETTING GLOBAL VARS -----
@@ -99,19 +100,22 @@ def product_item(name):
     lookup_data["category"] = front_mapper[int(index)]
     if form.validate_on_submit():
         # user logged in <<DATA>>
-        try:
-            user_id = current_user.id
-            product = Product.query.filter_by(name=name).first()
-            lookup = Cart(product.id, user_id)
-            db.session.add(lookup)
-            db.session.commit()
+        # try:
+        user_id = current_user.id
+        product = Product.query.filter_by(name=name).first()
+        # when to book
+        when = form.date.data
+        when_datetime = parser.parse(when)
+        lookup = Cart(product.id, user_id,when_datetime)
+        db.session.add(lookup)
+        db.session.commit()
+        return redirect(url_for("cart"))
 
-            flash("Item Added to cart Successfully", "success")
-            time.sleep(2)
-            return redirect(url_for("cart"))
-        except AttributeError:
-            # require login
-            return redirect(url_for("user_login", next="product_item", name=name))
+        # flash("Item Added to cart Successfully", "success")
+        # time.sleep(2)
+        # except AttributeError:
+        #     # require login
+        #     return redirect(url_for("user_login", next="product_item", name=name))
     else:
         flash("Item Could be added to the cart", "Error")
     return render_template("work-single.html", product=lookup_data, form=form)
@@ -153,7 +157,7 @@ def login():
             login_user(user)
             return redirect(next_page) if next_page else redirect(url_for('products_all'))
         else:
-            flash("Login unsuccessful Please Check Email and Password", "danger ")
+            flash("Login unsuccessful Please Check Email and Password", "danger")
     return render_template("login.html", form=login)
 
 
@@ -215,7 +219,6 @@ def user_register():
 @app.route("/admin/product/all")
 @login_required
 def products_all():
-
     # get products from the database
     products = Product.query.all()
     product_dict = products_schema.dump(products)
@@ -329,7 +332,7 @@ def cart():
     return render_template("cart_posts.html", orders=data, user=current_user)
 
 
-@app.route("/checkout", methods=["GET","POST"])
+@app.route("/checkout", methods=["GET", "POST"])
 @login_required
 def checkout():
     data = list()
@@ -346,9 +349,7 @@ def checkout():
         data.append(new)
     #  orders=lookup_datarr
     print(data)
-    return render_template("cart_posts.html", orders=data,user=current_user)
-
-
+    return render_template("cart_posts.html", orders=data, user=current_user)
 
 
 @app.route("/db/seed", methods=["POST"])
@@ -420,7 +421,7 @@ def add():
 @app.route("/admin/orders/manage", methods=['POST', "GET"])
 @login_required
 def order():
-    authorized(current_user,"add")
+    authorized(current_user, "add")
     # getting all the orders
     orders_lookup = Order.query.all()
     orders_data = orders_schema.dump(orders_lookup)
@@ -465,6 +466,6 @@ def test_():
     return render_template("test.html")
 
 
-def authorized(user,redirect_to):
+def authorized(user, redirect_to):
     if not is_admin(user):
         return redirect(url_for(redirect_to))

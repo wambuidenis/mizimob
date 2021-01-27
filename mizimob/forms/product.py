@@ -106,4 +106,5 @@ class PhoneEmail(FlaskForm):
 
 
 class CartForm(FlaskForm):
+    date = StringField("When", validators=[DataRequired()])
     submit = SubmitField("Add To Cart")

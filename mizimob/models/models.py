@@ -39,7 +39,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"User (' {self.id}', '{self.email}', '{self.image_file}' )"
 
-    def __init__(self, firstname, lastname, phone, email, password,is_admin):
+    def __init__(self, firstname, lastname, phone, email, password, is_admin):
         self.firstname = firstname
         self.lastname = lastname
         self.phone = phone
@@ -52,7 +52,7 @@ class User(db.Model, UserMixin):
 
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ("id", "firstname", "lastname", "phone", "email", "password","is_admin")
+        fields = ("id", "firstname", "lastname", "phone", "email", "password", "is_admin")
 
 
 # creating a company class
@@ -110,18 +110,20 @@ class Order(db.Model):
 
 class OrderSchema(ma.Schema):
     class Meta:
-        fields = ("id", "product_id", "location", "when", "email", "phone", "date_added")
+        fields = ("id", "product_id", "when", "date_added")
 
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.ForeignKey('product.id'), nullable=True)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
+    when = db.Column(db.DateTime, nullable=False,default=datetime.now)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
-    def __init__(self, product_id, user_id):
+    def __init__(self, product_id, user_id, when):
         self.product_id = product_id
         self.user_id = user_id
+        self.when = when
 
 
 class CartSchema(ma.Schema):
