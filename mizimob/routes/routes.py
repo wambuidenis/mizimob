@@ -106,7 +106,7 @@ def product_item(name):
         # when to book
         when = form.date.data
         when_datetime = parser.parse(when)
-        lookup = Cart(product.id, user_id,when_datetime)
+        lookup = Cart(product.id, user_id, when_datetime)
         db.session.add(lookup)
         db.session.commit()
         return redirect(url_for("cart"))
@@ -319,14 +319,17 @@ def cart():
     user = current_user
     data_ = Cart.query.filter_by(user_id=user.id).all()
     for item in data_:
+        unformatted = item.when
         new = list()
         id = item.product_id
         product = Product.query.get(id)
         image = Media.query.filter_by(product_id=id).first()
+        item.pretty_date = unformatted.strftime("%a, %d %b %y %I:%M")
         new.append(item)
         new.append(product)
         new.append(image)
         data.append(new)
+
     #  orders=lookup_datarr
     print(data)
     return render_template("cart_posts.html", orders=data, user=current_user)
@@ -349,7 +352,27 @@ def checkout():
         data.append(new)
     #  orders=lookup_datarr
     print(data)
-    return render_template("cart_posts.html", orders=data, user=current_user)
+    return render_template("checkout.html", orders=data, user=current_user)
+
+
+@app.route("/order/confirmed", methods=["GET", "POST"])
+@login_required
+def order_confirmed():
+    data = list()
+    user = current_user
+    data_ = Cart.query.filter_by(user_id=user.id).all()
+    for item in data_:
+        new = list()
+        id = item.product_id
+        product = Product.query.get(id)
+        image = Media.query.filter_by(product_id=id).first()
+        new.append(item)
+        new.append(product)
+        new.append(image)
+        data.append(new)
+    #  orders=lookup_datarr
+    print(data)
+    return render_template("checkout.html", orders=data, user=current_user)
 
 
 @app.route("/db/seed", methods=["POST"])
@@ -464,6 +487,16 @@ def logout():
 @app.route("/test")
 def test_():
     return render_template("test.html")
+
+
+@app.route("/cart/<string:id>")
+def cart_remove(id):
+    if (id):
+        item = Cart.query.get(id)
+        if (item):
+            db.session.delete(item)
+            db.session.commit()
+    return redirect(url_for("cart"))
 
 
 def authorized(user, redirect_to):

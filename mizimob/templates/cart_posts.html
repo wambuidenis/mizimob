@@ -79,7 +79,8 @@
                             <div class="col-1">
                                 <img class="img-fluid-2" width="50px" src="{{ url_for('static',filename='uploads/'+order[2].file )}}">
                             </div>
-                            <div class="col-4 offset-1">{{ order[1].name }}. - {{ order[1].when }}</div>
+                             <div class="col-4 offset-1">{{ order[1].name }}. - <span id="cart_dates">{{ order[0].pretty_date
+                                     }}</span></div>
 
                             <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}"
                                                   class="float-right btn-secondary btn-sm" >-</a>
@@ -90,6 +91,10 @@
                         <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}"
                                                class="btn-secondary btn-sm"
                         >+</a>
+                            </div>
+                         <div class="col-1"><a href="{{ url_for('cart_remove',id=order[0].id) }}"
+                                               class="btn-outline-secondary btn-sm"
+                        >Remove</a>
                             </div>
                         </div>
                      {% endfor %}
