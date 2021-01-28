@@ -5,12 +5,18 @@
     <!-- ======= SHOP SECTION ======= -->
     <section class="section site-portfolio">
           <div id="main">
-
-
 {#            adding item to the DOM#}
             <!-- ======= SHOP SECTION ======= -->
             <section class="section site-portfolio">
               <div class="container">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                            {% for category,message in messages %}
+                            <div class="alert alert-{{ category }} col-sm-12 col-md-8 col-lg-6">{{message}}</div>
+                            {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
                 <div class="row mb-5 align-items-center">
                   <div class="col-md-12 col-lg-6 mb-4 mb-lg-0"  data-aos="fade-up">
                     <h4 class="mt-2">Our Services</h4>

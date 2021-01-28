@@ -45,17 +45,12 @@
       <a class="navbar-brand" href="{{ url_for('home') }}">
           <img src="{{  url_for('static',filename='logo.jpg') }}" id="logo" height="70" ®alt="Mizimob">
       </a>
-
-
     </div>
   </nav>
 
 
 </div>
 {#start main#}
-
-
-
 <main id="main">
     <section class="section">
       <div class="container">
@@ -67,6 +62,13 @@
       </div>
       <div class="site-section pt-0">
         <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                    {% for category,message in messages %}
+                    <div class="alert alert-{{ category }} col-sm-12 col-md-8 col-lg-6">{{message}}</div>
+                    {% endfor %}
+            {% endif %}
+        {% endwith %}
         <h4 class="text-muted">My Cart / Orders</h4>
             <hr>
              <div class="row align-items-stretch">

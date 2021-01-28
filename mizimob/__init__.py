@@ -18,6 +18,8 @@ db_user = os.getenv('DBUSER')
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = 'ae98b899c219ea14930e01ecaafd451090f4276f6e3c20481d92d240acb35d47'
+app.secret_key = 'ae98b899c219ea14930e01ecaafd451090f4276f6e3c20481d92d240acb35d47'
+
 # basedir  = os.path.abspath(os.path.dirname(__file__))
 
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql+mysqlconnector://{db_user}:{db_pass}@localhost:3306/mizimob"
@@ -30,8 +32,11 @@ try:
     migrate = Migrate(app, db)
 
     # setting session
-    SESSION_TYPE = 'sqlalchemy'
+    # SESSION_TYPE = 'sqlalchemy'
     app.config.from_object(__name__)
+
+    app.config['SESSION_TYPE'] = 'filesystem'
+
     Session(app)
 
 except sqlalchemy.exc.ProgrammingError as e:

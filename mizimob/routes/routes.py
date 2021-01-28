@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, send_from_directory, redirect,session
+from flask import render_template, request, redirect, url_for, flash, send_from_directory, redirect, session
 from flask_login import login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import sqlalchemy
 
@@ -12,7 +12,6 @@ import os
 from PIL import Image
 import time
 from dateutil import parser
-
 
 # ---------------------------------
 # ------- SETTING GLOBAL VARS -----
@@ -47,8 +46,6 @@ def mapper():
 
 mapper()
 
-session["key"]  = "denis kiruku wambui"
-
 
 # serving some images
 @app.route("/img/map-9.jpg", methods=["GET"])
@@ -63,9 +60,12 @@ def map_10():
 
 @app.route('/')
 def home():
+    session["key"] = "denis kiruku wambui"
+
     # get products from the database
     products = Product.query.all()
     product_dict = products_schema.dump(products)
+
     # name
     new_products = list()
     for product in product_dict:
@@ -101,26 +101,28 @@ def product_item(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = front_mapper[int(index)]
-    if form.validate_on_submit():
-        # user logged in <<DATA>>
-        # try:
-        user_id = current_user.id
-        product = Product.query.filter_by(name=name).first()
-        # when to book
-        when = form.date.data
-        when_datetime = parser.parse(when)
-        lookup = Cart(product.id, user_id, when_datetime)
-        db.session.add(lookup)
-        db.session.commit()
-        return redirect(url_for("cart"))
+    if request.method == "POST":
+        if form.validate_on_submit():
+            # user logged in <<DATA>>
+            # try:
+            user_id = current_user.id
+            product = Product.query.filter_by(name=name).first()
+            # when to book
+            when = form.date.data
+            when_datetime = parser.parse(when)
+            lookup = Cart(product.id, user_id, when_datetime)
+            db.session.add(lookup)
+            db.session.commit()
+            return redirect(url_for("cart"))
+            flash("Item Added to cart Successfully", "success")
 
-        # flash("Item Added to cart Successfully", "success")
-        # time.sleep(2)
-        # except AttributeError:
-        #     # require login
-        #     return redirect(url_for("user_login", next="product_item", name=name))
-    else:
-        flash("Item Could be added to the cart", "Error")
+            # time.sleep(2)
+            # except AttributeError:
+            #     # require login
+            #     return redirect(url_for("user_login", next="product_item", name=name))
+        else:
+            flash("Item Could be added to the cart", "Error")
+
     return render_template("work-single.html", product=lookup_data, form=form)
 
 
@@ -140,7 +142,6 @@ def item_view(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = front_mapper[int(index)]
-
     return render_template("cart_view.html", product=lookup_data)
 
 
@@ -156,7 +157,6 @@ def login():
         user = User.query.filter_by(email=login.email.data).first()
         if user and bcrypt.check_password_hash(user.password, login.password.data):
             next_page = request.args.get("next")
-            print("???????? NEXT PAGE", next_page)
             login_user(user)
             return redirect(next_page) if next_page else redirect(url_for('products_all'))
         else:
@@ -321,6 +321,7 @@ def cart():
     data = list()
     user = current_user
     data_ = Cart.query.filter_by(user_id=user.id).all()
+    price = 0
     for item in data_:
         unformatted = item.when
         new = list()
@@ -328,14 +329,12 @@ def cart():
         product = Product.query.get(id)
         image = Media.query.filter_by(product_id=id).first()
         item.pretty_date = unformatted.strftime("%a, %d %b %y %I:%M")
+        price = price + product.price
         new.append(item)
         new.append(product)
         new.append(image)
         data.append(new)
-
-    #  orders=lookup_datarr
-    print(data)
-    return render_template("cart_posts.html", orders=data, user=current_user)
+    return render_template("cart_posts.html", orders=data, user=current_user, total=price)
 
 
 @app.route("/checkout", methods=["GET", "POST"])
@@ -344,18 +343,20 @@ def checkout():
     data = list()
     user = current_user
     data_ = Cart.query.filter_by(user_id=user.id).all()
+    price = 0
     for item in data_:
+        unformatted = item.when
         new = list()
         id = item.product_id
         product = Product.query.get(id)
         image = Media.query.filter_by(product_id=id).first()
+        item.pretty_date = unformatted.strftime("%a, %d %b %y %I:%M")
+        price = price + product.price
         new.append(item)
         new.append(product)
         new.append(image)
         data.append(new)
-    #  orders=lookup_datarr
-    print(data)
-    return render_template("checkout.html", orders=data, user=current_user)
+    return render_template("checkout.html", orders=data, user=current_user, total=price)
 
 
 @app.route("/confirm/order", methods=["GET", "POST"])
@@ -497,6 +498,7 @@ def cart_remove(id):
         if (item):
             db.session.delete(item)
             db.session.commit()
+            flash(f"Item removed from cart", "info")
     return redirect(url_for("cart"))
 
 
