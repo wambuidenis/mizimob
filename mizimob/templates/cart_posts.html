@@ -67,8 +67,7 @@
       </div>
       <div class="site-section pt-0">
         <div class="container">
-        <h4 class="text-muted">My Cart / Orders</h4>
-            <hr>
+        <h5 class="text-muted mb-2">My Cart / Orders</h5>
              <div class="row align-items-stretch">
                   {% if orders %}
                       <div class="col-12 row mt-2 bold mb-4 h6">
@@ -99,8 +98,10 @@
                              <div class="col-1 offset-1">
                                 {{ order[1].price }}
                             </div>
-                             <div class="col-4 offset-1">{{ order[1].name }}. - <span id="cart_dates">{{ order[0].pretty_date
-                                     }}</span></div>
+                             <div class="col-4 offset-1">{{ order[1].name }}.<br> <mark id="p-3 mb-2 bg-primary
+                             text-white">{{ order[0]
+                             .pretty_date
+                                     }}</mark></div>
 
 {#                            <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}"#}
 {#                                                  class="float-right btn-secondary btn-sm" >-</a>#}
@@ -120,9 +121,8 @@
                      {% endfor %}
                       <div class=" mt-5 col-lg-12">
                       <h5 class="text-muted bold ">Total : KES {{ total }}</h5>
-                            <a href="{{ url_for('checkout',user=user) }}" class="btn btn-sm btn-outline-primary
-                            col-sm-12
-                            col-lg-3 mt-3">Proceed To
+                            <a href="{{ url_for('checkout',user=user) }}" class="btn col-lg-3 col-md-6 col-sm-12 btn-sm
+                            btn-success btn-block mt-4">Proceed To
                                 Checkout</a>
                       </div>
                   {%  else %}
@@ -130,11 +130,80 @@
                       <div class="col-lg-12">
                           <h4><i class="fas fa-exclamation-triangle"></i></h4>
                           <h5>Oops!</h5>
-                          <h6>Your cart is Empty</h6>
+                          <h6>Your cart is Empty</h6> <br>
                           <a href="/" class="btn btn-sm btn-info">Make An Order</a>
+                          <a href="/" class="ml-3 btn btn-sm btn-outline-info">View My orders</a>
                       </div>
                       </div>
                   {% endif %}
+
+                </p>
+              </div>
+            <br><br>
+            <br><br>
+            <hr>
+        <div class="row col-12">
+            <h5 class="text-muted mt-5 mb-3 mt-5">My Orders</h5>
+        </div>
+        <div class="row align-items-stretch">
+                  {% if odr %}
+                      <div class="col-12 row mt-2 bold mb-4 h6">
+                         <div class="col-1">
+                                No
+                            </div>
+
+                            <div class="col-1 offset-1">
+                                Image
+                            </div>
+                             <div class="col-2 offset-1">
+                                Price
+                            </div>
+
+                         <div class="col-4"> Name and order time</div>
+                         <div class="col-1"> Action</div>
+                        </div>
+                      {% for order in odr %}
+
+                         <div class="col-12 row mt-2">
+                         <div class="col-1">
+                                ITM{{ order[0].id }}
+                            </div>
+                            <div class="col-1 offset-1">
+                                <img class="img-fluid-2" width="50px" src="{{ url_for('static',filename='uploads/'+order[2].file )}}">
+                            </div>
+                             <div class="col-1 offset-1">
+                                {{ order[1].price }}
+                            </div>
+                             <div class="col-4 offset-1">{{ order[1].name }}.<br> <mark id="p-3 mb-2 bg-primary
+                             text-white">{{ order[0]
+                             .pretty_date
+                                     }}</mark></div>
+
+{#                            <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}"#}
+{#                                                  class="float-right btn-secondary btn-sm" >-</a>#}
+{#                            </div>#}
+{#                             <div class="col-1"><input class="form-control form-control-sm disabled" readonly#}
+{#                                                       placeholder="1"></input>#}
+{#                            </div>#}
+{#                        <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}"#}
+{#                                               class="btn-secondary btn-sm"#}
+{#                        >+</a>#}
+{#                            </div>#}
+                         <div class="col-1"><a href="{{ url_for('cart_remove',id=order[0].id)}}"
+                                               class="btn-outline-secondary btn-sm">More Info</a></div>
+                        </div>
+                     {% endfor %}
+                  {%  else %}
+                      <div class="row mt-1" style="margin-left:0px;">
+                      <div class="col-lg-12">
+                          <h4><i class="fas fa-exclamation-triangle"></i></h4>
+                          <h5>Oops!</h5>
+                          <h6>Your Currently have no orders</h6> <br>
+                          <a href="/" class="btn btn-sm btn-outline-info">View My order History</a>
+                      </div>
+                      </div>
+                  {% endif %}
+
                 </p>
               </div>
           </div>

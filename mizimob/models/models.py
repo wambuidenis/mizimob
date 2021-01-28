@@ -100,6 +100,7 @@ class Order(db.Model):
     product_id = db.Column(db.ForeignKey('product.id'), nullable=True)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=True)
     when = db.Column(db.String(255), nullable=True)
+    confirmed = db.Column(db.Boolean, default=False)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, product_id, user_id, when):
@@ -110,14 +111,14 @@ class Order(db.Model):
 
 class OrderSchema(ma.Schema):
     class Meta:
-        fields = ("id", "product_id", "when", "date_added")
+        fields = ("id", "product_id", "when", "date_added", "confirmed")
 
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.ForeignKey('product.id'), nullable=True)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
-    when = db.Column(db.DateTime, nullable=False,default=datetime.now)
+    when = db.Column(db.DateTime, nullable=False, default=datetime.now)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, product_id, user_id, when):

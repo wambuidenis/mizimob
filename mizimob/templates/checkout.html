@@ -61,28 +61,77 @@
             {% endif %}
         {% endwith %}
 
-        <h4 class="text-muted">My Cart / Orders</h4>
+        <h4 class="text-muted">Checkout</h4>
             <hr>
              <div class="row align-items-stretch">
                   {% if orders %}
-                      {% for order in orders %}
-                        <div class="col-12 row mt-2">
-                            <div class="col-1">
-                                <h6 class="col-1">{{ order[0].id }}.</h6>
+                     <div class="col-12 row mt-2 bold mb-4 h6">
+                         <div class="col-1">
+                                No
                             </div>
-                            <div class="col-2 offset-1">
+
+                            <div class="col-1 offset-1">
+                                Image
+                            </div>
+                             <div class="col-2 offset-1">
+                                Price
+                            </div>
+
+                         <div class="col-4"> Name and order time</div>
+                         <div class="col-1"> Action</div>
+                        </div>
+                      {% for order in orders %}
+
+                         <div class="col-12 row mt-2">
+                         <div class="col-1">
+                                ITM{{ order[0].id }}
+                            </div>
+
+                            <div class="col-1 offset-1">
                                 <img class="img-fluid-2" width="50px" src="{{ url_for('static',filename='uploads/'+order[2].file )}}">
                             </div>
-                            <div class="col-4 offset-1">{{ order[1].name }}.</div>
-                            <div class="col-2"><a href="{{ url_for('item_view',name=order[1].name) }}" >More Info</a>
+                             <div class="col-1 offset-1">
+                                {{ order[1].price }}
+                            </div>
+                             <div class="col-4 offset-1">{{ order[1].name }}.<br> <mark id="p-3 mb-2 bg-primary
+                                 text-white">{{ order[0]
+                             .pretty_date
+                                     }}<mark/></div>
+
+{#                            <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}"#}
+{#                                                  class="float-right btn-secondary btn-sm" >-</a>#}
+{#                            </div>#}
+{#                             <div class="col-1"><input class="form-control form-control-sm disabled" readonly#}
+{#                                                       placeholder="1"></input>#}
+{#                            </div>#}
+{#                        <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name) }}"#}
+{#                                               class="btn-secondary btn-sm"#}
+{#                        >+</a>#}
+{#                            </div>#}
+                         <div class="col-1"><a href="{{ url_for('cart_remove',id=order[0].id) }}"
+                                               class="btn-outline-secondary btn-sm"
+                        >Remove</a>
                             </div>
                         </div>
                      {% endfor %}
                       <div class=" mt-5 col-lg-12">
-                            <a href="{{ url_for('order_confirmed',user=user) }}" class="btn btn-sm btn-outline-primary
-                            col-sm-12
-                            offset-lg-4
-                            col-lg-3">Confirm Order</a>
+                      <p class="h6 text-muted">
+                          Please Confirm that  you would like to make the order for item above.
+                          An Email shall be sent to Mizimob for confirmation.<i>
+                          Please make sure you intend to make the order before proceeding.</i>
+                      </p>
+                            <h5 class="text-muted bold mt-4">Total : KES {{ total }}</h5>
+{#                            <a href="{{ url_for('order_confirmed',user=user) }}" class="btn btn-sm#}
+{#                            btn-outline-primary#}
+{#                            col-sm-12#}
+{#                            col-lg-3 mt-4">Confirm Order</a>#}
+
+            <form action="{{ url_for('order_confirmed',user=user) }}" method='POST'>
+                {{ form.hidden_tag() }}
+                <div class="mt-5 mb-3">
+                     {{ form.submit(class="btn col-lg-3 col-md-6 col-sm-12 btn-sm btn-success btn-block mt-4")}}
+                </div>
+            </form>
                       </div>
                   {%  else %}
                       <div class="row" style="margin-left:0px;">

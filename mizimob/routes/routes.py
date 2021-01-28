@@ -4,7 +4,7 @@ from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
 from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm,
-                                   RegisterForm, CartForm)
+                                   RegisterForm, CartForm, Checkout)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
                                    ProductSchema, Order, OrderSchema, Cart, CartSchema)
 from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square, is_admin
@@ -334,7 +334,24 @@ def cart():
         new.append(product)
         new.append(image)
         data.append(new)
-    return render_template("cart_posts.html", orders=data, user=current_user, total=price)
+
+    orders = list()
+    orders_ = Order.query.filter_by(user_id=user.id).all()
+    for item in orders_:
+        print(item)
+        unformatted = parser.parse(item.when)
+        print(unformatted)
+        new = list()
+        id = item.product_id
+        product = Product.query.get(id)
+        image = Media.query.filter_by(product_id=id).first()
+        item.pretty_date = unformatted.strftime("%a, %d %b %y %I:%M")
+        new.append(item)
+        new.append(product)
+        new.append(image)
+        orders.append(new)
+
+    return render_template("cart_posts.html", orders=data, user=current_user, total=price, odr= orders)
 
 
 @app.route("/checkout", methods=["GET", "POST"])
@@ -342,6 +359,8 @@ def cart():
 def checkout():
     data = list()
     user = current_user
+    form = Checkout()
+
     data_ = Cart.query.filter_by(user_id=user.id).all()
     price = 0
     for item in data_:
@@ -356,25 +375,31 @@ def checkout():
         new.append(product)
         new.append(image)
         data.append(new)
-    return render_template("checkout.html", orders=data, user=current_user, total=price)
+    return render_template("checkout.html", orders=data, user=current_user, total=price, form=form)
 
 
 @app.route("/confirm/order", methods=["GET", "POST"])
 @login_required
 def order_confirmed():
-    data = list()
+    """Here we are going to add the item to the users order for the day and remove the fom the cart"""
+
     user = current_user
     data_ = Cart.query.filter_by(user_id=user.id).all()
+
     for item in data_:
-        new = list()
-        id = item.product_id
-        product = Product.query.get(id)
-        image = Media.query.filter_by(product_id=id).first()
-        new.append(item)
-        new.append(product)
-        new.append(image)
-        data.append(new)
-    return render_template("checkout.html", orders=data, user=current_user)
+        lookup = Order(item.product_id, item.user_id, item.when)
+        db.session.add(lookup)
+        db.session.commit()
+
+        # remove order from the database
+        cart_item = Cart.query.get(item.id)
+        db.session.delete(cart_item)
+        db.session.commit()
+
+    # we are going to email the user
+    flash("Order have been made. Please wait confirmation from mizimob", "success")
+
+    return redirect(url_for("cart"))
 
 
 @app.route("/db/seed", methods=["POST"])
