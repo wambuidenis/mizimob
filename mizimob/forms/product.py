@@ -112,3 +112,7 @@ class CartForm(FlaskForm):
 
 class Checkout(FlaskForm):
     submit = SubmitField("Confirm Order")
+
+
+class CancelOrder(FlaskForm):
+    submit = SubmitField("Cancel Order")

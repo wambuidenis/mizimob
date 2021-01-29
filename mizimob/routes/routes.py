@@ -3,11 +3,10 @@ from flask_login import login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
-from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, PhoneEmail, OrderForm, CategoryForm,
-                                   RegisterForm, CartForm, Checkout)
+from mizimob.forms.product import (LoginForm, ProductForm,CategoryForm,RegisterForm, CartForm, Checkout,CancelOrder)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
-                                   ProductSchema, Order, OrderSchema, Cart, CartSchema)
-from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square, is_admin
+                                   ProductSchema, Order, OrderSchema, Cart, CartSchema,OrderGroup)
+from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square, is_admin,unique_code
 import os
 from PIL import Image
 import time
@@ -126,9 +125,12 @@ def product_item(name):
     return render_template("work-single.html", product=lookup_data, form=form)
 
 
-@app.route('/cart/view/<string:name>')
+@app.route('/order/view/<string:name>')
 @login_required
 def item_view(name):
+
+    # cancel from
+    form =  CancelOrder()
     #  we are going  to get the name from the database
     # get images and file fron the database and sho them here
     lookup = Product.query.filter_by(name=name).first()
@@ -142,7 +144,24 @@ def item_view(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = front_mapper[int(index)]
-    return render_template("cart_view.html", product=lookup_data)
+    return render_template("cart_view.html", product=lookup_data,form=form)
+
+
+@app.route('/order/cancel/<string:name>',methods=['POST','GET'])
+@login_required
+def cancel_order(name):
+    # cancel from
+    form = CancelOrder()
+    # validate from
+    if form.validate_on_submit():
+        lookup = Product.query.filter_by(name=name).first()
+        order = Order.query.filter_by(product_id = lookup.id).first()
+        print(order)
+        if order:
+            db.session.delete(order)
+            db.session.commit()
+
+    return redirect(url_for("cart",name=name))
 
 
 @app.route("/admin/login", methods=["POST", 'GET'])
@@ -382,12 +401,13 @@ def checkout():
 @login_required
 def order_confirmed():
     """Here we are going to add the item to the users order for the day and remove the fom the cart"""
-
+    # unique code
+    unique = unique_code("ORD")
     user = current_user
     data_ = Cart.query.filter_by(user_id=user.id).all()
 
     for item in data_:
-        lookup = Order(item.product_id, item.user_id, item.when)
+        lookup = Order(item.product_id, item.user_id, item.when,unique)
         db.session.add(lookup)
         db.session.commit()
 
@@ -396,6 +416,10 @@ def order_confirmed():
         db.session.delete(cart_item)
         db.session.commit()
 
+
+
+    # we are going to add the order to the order group
+    order_grp = OrderGroup()
     # we are going to email the user
     flash("Order have been made. Please wait confirmation from mizimob", "success")
 

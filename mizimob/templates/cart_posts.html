@@ -25,6 +25,8 @@
   <link href="{{ url_for('static',filename='assets/vendor/line-awesome/css/line-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static',filename='assets/vendor/owl.carousel/assets/owl.carousel.css') }}" rel="stylesheet">
   <link href="{{ url_for('static',filename='assets/vendor/aos/aos.css') }}") rel="stylesheet">
+  <link href="{{ url_for('static',filename='fontawesome/css/all.css') }}") rel="stylesheet">
+  <link href="{{ url_for('static',filename='fontawesome/js/all.js') }}") rel="stylesheet">
 
 {#  rel="stylesheet">#}
 
@@ -128,7 +130,7 @@
                   {%  else %}
                       <div class="row" style="margin-left:0px;">
                       <div class="col-lg-12">
-                          <h4><i class="fas fa-exclamation-triangle"></i></h4>
+                          <h1 class="mt-4" style="color:#e0a800"><i class="fas fa-sad-tear"></i></h1>
                           <h5>Oops!</h5>
                           <h6>Your cart is Empty</h6> <br>
                           <a href="/" class="btn btn-sm btn-info">Make An Order</a>
@@ -189,14 +191,14 @@
 {#                                               class="btn-secondary btn-sm"#}
 {#                        >+</a>#}
 {#                            </div>#}
-                         <div class="col-1"><a href="{{ url_for('cart_remove',id=order[0].id)}}"
-                                               class="btn-outline-secondary btn-sm">More Info</a></div>
+                         <div class="col-1"><a href="{{ url_for('item_view',name=order[1].name)}}"
+                                               class="btn-outline-secondary btn-sm">More</a></div>
                         </div>
                      {% endfor %}
                   {%  else %}
                       <div class="row mt-1" style="margin-left:0px;">
                       <div class="col-lg-12">
-                          <h4><i class="fas fa-exclamation-triangle"></i></h4>
+                           <h1 class="mt-4" style="color:#e0a800"><i class="fas fa-sad-tear"></i></h1>
                           <h5>Oops!</h5>
                           <h6>Your Currently have no orders</h6> <br>
                           <a href="/" class="btn btn-sm btn-outline-info">View My order History</a>

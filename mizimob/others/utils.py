@@ -2,6 +2,7 @@ import re
 import smtplib, ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import secrets
 
 
 def validate_email(email):
@@ -244,6 +245,10 @@ def crop_max_square(pil_img):
 
 def is_admin(user):
     return user.is_admin
+
+
+def unique_code(prepend):
+    return f"{prepend.upper()}-{secrets.token_hex(8)}"
 
 
 
