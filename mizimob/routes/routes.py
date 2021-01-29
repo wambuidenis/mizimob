@@ -408,7 +408,7 @@ def order_confirmed():
     data_ = Cart.query.filter_by(user_id=user.id).all()
     order_list = list()
     for item in data_:
-
+        # appending order to a list
         order_list.append(item.product_id)
 
         lookup = Order(item.product_id, item.user_id, item.when, unique)
@@ -421,10 +421,9 @@ def order_confirmed():
         db.session.commit()
 
     # we are going to add the order to the order group
-    order_grp = OrderGroup(json.dumps(order_list),current_user.id,unique)
+    order_grp = OrderGroup(json.dumps(order_list), current_user.id, unique)
     db.session.add(order_grp)
     db.session.commit()
-
 
     # we are going to email the user
     flash("Order have been made. Please wait confirmation from mizimob", "success")

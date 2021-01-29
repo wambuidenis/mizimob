@@ -101,7 +101,7 @@ class Order(db.Model):
     user_id = db.Column(db.ForeignKey('user.id'), nullable=True)
     when = db.Column(db.String(255), nullable=True)
     confirmed = db.Column(db.Boolean, default=False)
-    unique_code = db.Column(db.String,nullable=False)
+    unique_code = db.Column(db.String(255),nullable=False)
     date_added = db.Column(db.DateTime, default=datetime.now)
 
     def __init__(self, product_id, user_id, when,unique_code):
@@ -138,7 +138,7 @@ class OrderGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     products = db.Column(db.String(255), nullable=False)
     user_id = db.Column(db.ForeignKey('user.id'), nullable=False)
-    order_number = db.Column(db.String, nullable=False, unique=True)
+    order_number = db.Column(db.String(255), nullable=False, unique=True)
 
     def __init__(self,products,user_id,order_number):
         self.products  = products
