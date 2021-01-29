@@ -3,14 +3,16 @@ from flask_login import login_user, current_user, login_required, logout_user
 from flask_sqlalchemy import sqlalchemy
 
 from mizimob import app, bcrypt, db
-from mizimob.forms.product import (LoginForm, ProductForm,CategoryForm,RegisterForm, CartForm, Checkout,CancelOrder)
+from mizimob.forms.product import (LoginForm, ProductForm, CategoryForm, RegisterForm, CartForm, Checkout, CancelOrder)
 from mizimob.models.models import (User, Category, CategorySchema, UserSchema, Product, Media, MediaSchema,
-                                   ProductSchema, Order, OrderSchema, Cart, CartSchema,OrderGroup)
-from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square, is_admin,unique_code
+                                   ProductSchema, Order, OrderSchema, Cart, CartSchema, OrderGroup)
+from mizimob.others.utils import validate_email, validate_phone, send_email, reset_body, crop_max_square, is_admin, \
+    unique_code
 import os
 from PIL import Image
 import time
 from dateutil import parser
+import json
 
 # ---------------------------------
 # ------- SETTING GLOBAL VARS -----
@@ -128,9 +130,8 @@ def product_item(name):
 @app.route('/order/view/<string:name>')
 @login_required
 def item_view(name):
-
     # cancel from
-    form =  CancelOrder()
+    form = CancelOrder()
     #  we are going  to get the name from the database
     # get images and file fron the database and sho them here
     lookup = Product.query.filter_by(name=name).first()
@@ -144,10 +145,10 @@ def item_view(name):
     lookup_data["images"] = images
     index = lookup_data["category"]
     lookup_data["category"] = front_mapper[int(index)]
-    return render_template("cart_view.html", product=lookup_data,form=form)
+    return render_template("cart_view.html", product=lookup_data, form=form)
 
 
-@app.route('/order/cancel/<string:name>',methods=['POST','GET'])
+@app.route('/order/cancel/<string:name>', methods=['POST', 'GET'])
 @login_required
 def cancel_order(name):
     # cancel from
@@ -155,13 +156,13 @@ def cancel_order(name):
     # validate from
     if form.validate_on_submit():
         lookup = Product.query.filter_by(name=name).first()
-        order = Order.query.filter_by(product_id = lookup.id).first()
+        order = Order.query.filter_by(product_id=lookup.id).first()
         print(order)
         if order:
             db.session.delete(order)
             db.session.commit()
 
-    return redirect(url_for("cart",name=name))
+    return redirect(url_for("cart", name=name))
 
 
 @app.route("/admin/login", methods=["POST", 'GET'])
@@ -370,7 +371,7 @@ def cart():
         new.append(image)
         orders.append(new)
 
-    return render_template("cart_posts.html", orders=data, user=current_user, total=price, odr= orders)
+    return render_template("cart_posts.html", orders=data, user=current_user, total=price, odr=orders)
 
 
 @app.route("/checkout", methods=["GET", "POST"])
@@ -405,9 +406,12 @@ def order_confirmed():
     unique = unique_code("ORD")
     user = current_user
     data_ = Cart.query.filter_by(user_id=user.id).all()
-
+    order_list = list()
     for item in data_:
-        lookup = Order(item.product_id, item.user_id, item.when,unique)
+
+        order_list.append(item.product_id)
+
+        lookup = Order(item.product_id, item.user_id, item.when, unique)
         db.session.add(lookup)
         db.session.commit()
 
@@ -416,10 +420,12 @@ def order_confirmed():
         db.session.delete(cart_item)
         db.session.commit()
 
-
-
     # we are going to add the order to the order group
-    order_grp = OrderGroup()
+    order_grp = OrderGroup(json.dumps(order_list),current_user.id,unique)
+    db.session.add(order_grp)
+    db.session.commit()
+
+
     # we are going to email the user
     flash("Order have been made. Please wait confirmation from mizimob", "success")
 
