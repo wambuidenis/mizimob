@@ -32,8 +32,8 @@ images_schema = MediaSchema(many=True)
 order_schema = OrderSchema()
 orders_schema = OrderSchema(many=True)
 
-# categories = list()
-categories = Category.query.all()
+categories = list()
+# categories = Category.query.all()
 
 back_mapper = dict()
 front_mapper = dict()
@@ -434,7 +434,7 @@ def order_confirmed():
 @app.route("/db/seed", methods=["POST"])
 def seeder():
     # user seed
-    user = User("Admin", "Mode", "254719573310", "denniskiruku@gmail.com", bcrypt.generate_password_hash("1234"))
+    user = User("Admin", "Mode", "254719573310", "denniskiruku@gmail.com", bcrypt.generate_password_hash("1234"),True)
     db.session.add(user)
     try:
         #  category
